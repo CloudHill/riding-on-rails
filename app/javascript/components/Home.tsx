@@ -1,9 +1,6 @@
 import React from 'react';
-import Task from './Task';
+import Tasks from './Tasks';
 
 export default () => (
-  <div>
-    <h1>Test</h1>
-    <p>Hello</p>
-  </div>
+  <Tasks/>
 );

@@ -13,3 +13,166 @@
  *= require_tree .
  *= require_self
  */
+
+:root {
+  --border-radius: 4px;
+  --task-background: #f0f0f0;
+  --task-background_hover: #f3f3f3;
+  --option-background: #cccccc;
+  --accent-color: rgb(250, 110, 110);
+  --accent-foreground: black;
+  --input-background: #fff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+input {
+  font-size: 1em;
+}
+
+/* task list */
+
+.tasks-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.tasks {
+  flex: 1;
+  overflow-y: scroll;
+}
+
+/* task */
+
+.task, .add-task {
+  background: var(--task-background);  
+  border-radius: var(--border-radius);
+  padding: 12px;
+  display: flex;
+}
+
+.task {
+  margin-bottom: 4px;
+  border: 2px solid transparent;
+}
+
+.task:hover, .add-task:hover {
+  background: var(--task-background_hover)
+}
+
+.task-info {
+  flex: 1;
+  padding: 0 8px;
+}
+
+/* task edit */
+
+.task-editing {
+  border-color: var(--accent-color);
+}
+
+.task-edit_form {
+  width: 100%;
+}
+
+.title-input {
+  width: 100%;
+  background: var(--input-background);
+  padding: 6px;
+  border-radius: var(--border-radius);
+}
+
+.title-input input {
+  width: 100%;
+  background: transparent;
+  outline: none;
+  border: none;
+}
+
+/* task bar */
+
+.task-bar {
+  display: flex;
+  margin-top: 4px;
+}
+
+.task-actions {
+  margin-left: auto;
+  display: flex;
+}
+
+/* task option */
+
+.task-options {
+  display: flex;
+  padding: 4px
+}
+
+.option-button {
+  background: var(--option-background);
+  border: none;
+  width: 20px;
+  height: 20px;
+  padding: 4px;
+  margin-right: 12px;
+  border-radius: var(--border-radius);
+}
+
+.option-button[active] {
+  background: var(--accent-color);
+  color:var(--accent-foreground);
+}
+
+/* add task */
+
+.add-task {
+  margin-top: 20px;
+}
+
+.add-task_input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+/* action button */
+
+.action-button {
+  border: 2px solid var(--accent-color);
+  border-radius: var(--border-radius);
+}
+.button-primary {
+  background: var(--accent-color);
+  color: var(--accent-foreground);
+}
+
+.task-actions .action-button {
+  margin-right: 4px;
+}
+
+.task-actions .action-button:last-child {
+  margin-right: 0;
+}
+
+.action-check {
+  width: 24px;
+  height: 24px;
+  margin: 8px;
+  padding: 2px;
+  vertical-align: center;
+  border: 3px solid var(--accent-color);
+  border-radius: 50%;
+}
