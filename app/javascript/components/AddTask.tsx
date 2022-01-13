@@ -1,5 +1,6 @@
 import React, { ChangeEvent, FormEvent } from "react";
 import TaskInterface from "./TaskInterface";
+import { Plus } from 'react-feather';
 
 const initialState: TaskInterface = {
   title: "",
@@ -48,7 +49,9 @@ class AddTask extends React.Component<{crud: {add}}, TaskInterface> {
           autoFocus
         />
         <div className="actions">
-          <button type="submit" className="action-button action-add">➕</button>
+          <button title="Add task" type="submit" className="action-button action-add">
+            <Plus size="100%"/>
+          </button>
         </div>
       </form>
     )

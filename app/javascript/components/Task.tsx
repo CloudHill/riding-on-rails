@@ -1,6 +1,7 @@
-import React, { ChangeEvent, MouseEvent } from 'react';
+import React, { ChangeEvent, FormEvent, MouseEvent, forwardRef } from 'react';
 import TaskInterface from './TaskInterface';
-import { Check, Star, Calendar } from 'react-feather';
+import { Check, Star, Calendar, AlignJustify, X } from 'react-feather';
+import DatePicker from 'react-datepicker';
 
 interface TaskProps {
   task: TaskInterface, 
@@ -9,17 +10,28 @@ interface TaskProps {
   editTask: (number) => void
 };
 
-class Task extends React.Component<TaskProps, TaskInterface> {
+class Task extends React.Component<TaskProps, { task: TaskInterface, showNote: boolean }> {
   constructor(props) {
     super(props);
-    this.state = this.props.task;
+
+    const task = this.props.task;
+    const showNote = !!this.props.task.note;
+
+    this.state = {
+      task,
+      showNote
+    }
 
     this.deleteTask = this.deleteTask.bind(this);
     this.updateTask = this.updateTask.bind(this);
     this.completeTask = this.completeTask.bind(this);
-    this.onClick = this.onClick.bind(this);
-    this.onChange = this.onChange.bind(this);
+    this.toggleImportance = this.toggleImportance.bind(this);
+    this.setDueDate = this.setDueDate.bind(this);
+    this.showNote = this.showNote.bind(this);
+    this.onTitleInput = this.onTitleInput.bind(this);
+    this.onNoteInput = this.onNoteInput.bind(this);
     this.onFocus = this.onFocus.bind(this);
+    this.closeEdit = this.closeEdit.bind(this);
   }
   
   deleteTask() {
@@ -27,47 +39,100 @@ class Task extends React.Component<TaskProps, TaskInterface> {
     this.props.crud.delete(task);
   }
 
-  updateTask(newProps:{}) {
-    if ((newProps as TaskInterface).title == "") return;
+  updateTask(props) {
     const task = this.props.task;
-    this.props.crud.update(task, newProps);
-    this.setState(newProps);
+    const newTask = {...task, ...props};
+
+    this.setState({task: newTask});
+    this.props.crud.update(task, props);    
   }
 
   completeTask() {
     const task = this.props.task;
-    const newProps = task.completed
+    const props = task.completed
       ? {completed: false, completed_at: null,}
       : {completed: true, completed_at: new Date(),};
-    this.updateTask(newProps);
+    this.updateTask(props);
   }
 
-  onChange(e:ChangeEvent<HTMLInputElement>) {
-    const task = { title: this.state.title }
-    task[e.target.name] = e.target.value;
-    this.updateTask(task);
-    this.setState(task);
+  onTitleInput(e: ChangeEvent<HTMLInputElement>) {    
+    const props = { [e.target.name]: e.target.value }
+    this.updateTask(props);
   }
 
-  onClick(e:MouseEvent<HTMLButtonElement>) {
-    const task = { title: this.state.title }
-    switch (e.currentTarget.name) {
-      case 'important':
-        task['important'] = !this.state.important;
-    }
-    this.updateTask(task)
+  onNoteInput(e: FormEvent<HTMLSpanElement>) {        
+    const props = { note: (e.target as HTMLSpanElement).textContent }
+    this.updateTask(props);
+    
+  }
+
+  toggleImportance(e: MouseEvent<HTMLButtonElement>) {
+    const props = { important: !this.state.task.important }
+    this.updateTask(props);
+  }
+
+  showNote(e: MouseEvent<HTMLButtonElement>) {
+    this.setState({ showNote: !this.state.showNote });
+  }
+
+  setDueDate(date: Date) {
+    const props = { due_at: date };
+    this.updateTask(props);
+  }
+
+  closeEdit() {
+    this.props.editTask(null);
   }
 
   onFocus(e: React.FocusEvent<HTMLDivElement, Element>) {
-    if (this.props.editing) return;
-    this.setState(this.props.task);
-    this.props.editTask(this.props.task.id);
+    const {editing, task} = this.props;
+    const showNote = !!this.props.task.note;
+    if (editing) return;
+    this.setState({ task, showNote });
+    this.props.editTask(task.id);
+  }
+
+  getDate(date:Date) {
+    return date.toLocaleDateString(
+      undefined, 
+      {weekday: "short", day: 'numeric', month: "short"}
+    );
   }
 
   render() {
     const { task, editing } = this.props;
     const { title, note, important, completed } = task;
+    const { title:newTitle, note:newNote, important:newImportant, due_at:newDue } = this.state.task;
+    const dueAt = newDue ? new Date(newDue) : null;
     
+
+    //@ts-ignore
+    const CalendarButton = forwardRef(({ value, onClick }, ref) => (
+      //@ts-ignore
+      <button ref={ref}
+        className="option-button"
+        onClick={onClick} 
+        active={dueAt ? "" : undefined}
+      >
+        <Calendar size="100%" fill=""/>
+        {
+          dueAt
+            ? (
+              <>
+                <span className="option-date">{this.getDate(new Date(value))}</span>
+                <span className="clear-input" 
+                  onClick = {e => {
+                    this.setDueDate(null);
+                    e.stopPropagation();
+                  }}>
+                    <X size="12px"/>
+                </span>
+              </>
+            ) : null
+        }
+      </button>
+    ));
+
     return (
       <div
         className={"task" + (editing ? " task-editing" : "")} 
@@ -89,10 +154,36 @@ class Task extends React.Component<TaskProps, TaskInterface> {
             ? (
               <div className="task-info">
                 <div className="task-title">{title}</div>
-                <div>{note}</div>
-                <div className="task-bar">
-                  <div>{important ? "◇" : "◆"}</div>
-                </div>
+                {note ? <div className="task-note">{note}</div> : null}
+                {important || dueAt
+                  ? (
+                  <div className="task-bar">
+                    <div className="task-options">
+                      {
+                        important
+                          ? (
+                            //@ts-ignore
+                            <div className="option-button" active="">
+                              <Star size="100%" fill=""/>
+                            </div>
+                          ) : null
+                      }
+                      {
+                        dueAt
+                          ? (
+                            //@ts-ignore
+                            <div className="option-button" active="">
+                              <Calendar size="100%" fill=""/>
+                              <span className="option-date">
+                                {this.getDate(dueAt)}
+                              </span>
+                            </div>
+                          ) : null
+                      }
+                    </div>
+                  </div>
+                  ) : null
+                }
               </div>
             )
             : (
@@ -101,30 +192,50 @@ class Task extends React.Component<TaskProps, TaskInterface> {
                   <input 
                     name="title"
                     placeholder='Title'
-                    value={this.state.title}
-                    onChange={this.onChange}
+                    value={newTitle}
+                    onChange={this.onTitleInput}
                     autoFocus
                   />
                 </div>
+                {
+                  this.state.showNote
+                    ? (
+                      <div className="note-input">
+                        <span
+                          //@ts-ignore
+                          name="note"
+                          placeholder='Note'
+                          onInput={this.onNoteInput}
+                          contentEditable
+                        />
+                      </div>
+                    ) : null
+                }
                 <div className="task-bar">
                   <div className="task-options">
                     <button
-                      title="Set Importance"
-                      name="important"
-                      className={"option-button"}
+                      title="Add Note"
+                      className="option-button"
                       //@ts-ignore
-                      active={this.state.important ? "" : undefined}
-                      onClick={this.onClick}
+                      active={newNote ? "" : undefined}
+                      onClick={this.showNote}
+                    >
+                      <AlignJustify size="100%" fill=""/>
+                    </button>
+                    <button
+                      title="Set Importance"
+                      className="option-button"
+                      //@ts-ignore
+                      active={newImportant ? "" : undefined}
+                      onClick={this.toggleImportance}
                     >
                       <Star size="100%" fill=""/>
                     </button>
-                    <button 
-                      title="Set due date"
-                      name="due_date"
-                      className="option-button"
-                    >
-                      <Calendar size="100%" fill=""/>
-                    </button>
+                    <DatePicker
+                      selected={dueAt || new Date()}
+                      onChange={this.setDueDate}
+                      customInput={<CalendarButton/>}
+                    />
                   </div>
                   <div className="task-actions">
                     <button
@@ -132,6 +243,13 @@ class Task extends React.Component<TaskProps, TaskInterface> {
                       onClick={this.deleteTask}
                     >
                       Delete
+                    </button>
+                    <button
+                      title="Done"
+                      className="action-button button-primary"
+                      onClick={this.closeEdit}
+                    >
+                      <Check size="16px"/>
                     </button>
                   </div>
                 </div>

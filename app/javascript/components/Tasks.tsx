@@ -33,7 +33,7 @@ class Tasks extends React.Component<{}, { tasks: TaskInterface[], editing: numbe
   }
 
   addTask(task: TaskInterface) {
-    const url = "/api/v1/tasks";    
+    const url = "/api/v1/tasks";
     const token = this.getCsrfToken();
     
     // create task

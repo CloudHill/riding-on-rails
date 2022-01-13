@@ -12,13 +12,15 @@
  *
  *= require_tree .
  *= require_self
+ *= require react-datepicker
  */
 
 :root {
   --border-radius: 4px;
+  --note-foreground: #666;
   --task-background: #f0f0f0;
   --task-background_hover: #f3f3f3;
-  --option-background: #cccccc;
+  --button-background: #dfdfdf;
   --accent-color: rgb(250, 110, 110);
   --accent-foreground: black;
   --input-background: #fff;
@@ -30,13 +32,15 @@
 
 body {
   margin: 0;
-  font-family: sans-serif;
   -ms-user-select: none;
   -webkit-user-select: none;
   user-select: none;
 }
+body, textarea { 
+  font-family: sans-serif;
+}
 
-input {
+input, textarea {
   font-size: 1em;
 }
 
@@ -59,8 +63,15 @@ input {
 .task, .add-task {
   background: var(--task-background);  
   border-radius: var(--border-radius);
-  padding: 12px;
   display: flex;
+}
+
+.task {
+  padding: 8px;
+}
+
+.add-task {
+  padding: 8px 16px;
 }
 
 .task {
@@ -75,6 +86,16 @@ input {
 .task-info {
   flex: 1;
   padding: 0 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.task-note {
+  color: var(--note-foreground);
+  font-size: 0.8em;
+  margin-top: 5px;
+  white-space: pre-line;
 }
 
 /* task edit */
@@ -87,7 +108,8 @@ input {
   width: 100%;
 }
 
-.title-input {
+.title-input,
+.note-input {
   width: 100%;
   background: var(--input-background);
   padding: 6px;
@@ -101,11 +123,28 @@ input {
   border: none;
 }
 
+.note-input span {
+  display: inline-block;
+  width: 100%;
+  outline: none;
+  border: none;
+  min-height: 1em;
+}
+
+.note-input span[contenteditable]:empty::before {
+  content: "Note";
+  color: gray;
+}
+
+.note-input {
+  margin-top: 6px;
+}
+
 /* task bar */
 
 .task-bar {
   display: flex;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .task-actions {
@@ -117,22 +156,38 @@ input {
 
 .task-options {
   display: flex;
-  padding: 4px
 }
 
 .option-button {
-  background: var(--option-background);
+  display: flex;
+  background: var(--button-background);
+  align-items: center;
   border: none;
-  width: 20px;
-  height: 20px;
-  padding: 4px;
-  margin-right: 12px;
+  height: 18px;
+  padding: 3px;
+  margin-right: 6px;
   border-radius: var(--border-radius);
 }
 
 .option-button[active] {
   background: var(--accent-color);
   color:var(--accent-foreground);
+}
+
+.option-date {
+  margin: 0 6px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.clear-input {
+  padding: 0 2px;
+  background: rgb(197, 197, 197);
+  border-radius: var(--border-radius);
+}
+
+.note-input {
+  font-size: 0.8em;  
 }
 
 /* add task */
@@ -151,9 +206,17 @@ input {
 /* action button */
 
 .action-button {
-  border: 2px solid var(--accent-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--button-background);
   border-radius: var(--border-radius);
+  border: none;
+  outline: none;
+  height: 30px;
+  padding: 2px 8px;
 }
+
 .button-primary {
   background: var(--accent-color);
   color: var(--accent-foreground);
@@ -172,6 +235,7 @@ input {
   height: 24px;
   margin: 8px;
   padding: 2px;
+  color: var(--accent-color);
   vertical-align: center;
   border: 3px solid var(--accent-color);
   border-radius: 50%;
