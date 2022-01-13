@@ -2,6 +2,7 @@ import React from "react";
 import AddTask from "./AddTask";
 import Task from "./Task";
 import TaskInterface from "./TaskInterface";
+import { getCsrfToken } from "../helpers";
 
 class Tasks extends React.Component<{}, { tasks: TaskInterface[], editing: number }> {
   tasksRef: React.RefObject<HTMLDivElement>;
@@ -34,7 +35,7 @@ class Tasks extends React.Component<{}, { tasks: TaskInterface[], editing: numbe
 
   addTask(task: TaskInterface) {
     const url = "/api/v1/tasks";
-    const token = this.getCsrfToken();
+    const token = getCsrfToken();
     
     // create task
     fetch(url, {
@@ -62,7 +63,7 @@ class Tasks extends React.Component<{}, { tasks: TaskInterface[], editing: numbe
   updateTask(task: TaskInterface, newProps: object) {
     const id = task.id;
     const url = `/api/v1/tasks/${id}`;   
-    const token = this.getCsrfToken();
+    const token = getCsrfToken();
 
     fetch(url, {
       method: "PATCH",
@@ -88,7 +89,7 @@ class Tasks extends React.Component<{}, { tasks: TaskInterface[], editing: numbe
   deleteTask(task: TaskInterface) {
     const id = task.id;
     const url = `/api/v1/tasks/${id}`;
-    const token = this.getCsrfToken();
+    const token = getCsrfToken();
 
     fetch(url, {
       method: "DELETE",
@@ -105,12 +106,6 @@ class Tasks extends React.Component<{}, { tasks: TaskInterface[], editing: numbe
         this.setState({tasks});
       })
       .catch(error => console.log(error.message));
-  }
-
-  getCsrfToken():string {
-    return document
-      .querySelector('meta[name="csrf-token"]')
-      .attributes['content'].value;
   }
 
   editTask(id:number) {
