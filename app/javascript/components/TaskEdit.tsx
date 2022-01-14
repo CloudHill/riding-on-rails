@@ -1,9 +1,9 @@
-import React, { ChangeEvent, FormEvent, MouseEvent, forwardRef } from 'react';
+import React, { ChangeEvent, forwardRef } from 'react';
 import TaskInterface from './TaskInterface';
-import { Check, Star, Calendar, AlignJustify, X } from 'react-feather';
 import DatePicker from 'react-datepicker';
+import { Check, Star, Calendar, AlignJustify, X } from 'react-feather';
+import { Editor, EditorState, ContentState } from 'draft-js';
 import { formatDate } from '../helpers';
-
 
 interface Props {
   task: TaskInterface;
@@ -17,6 +17,7 @@ interface State {
   important: boolean;
   due_at:  null | Date;
   showNote: boolean;
+  editorState: EditorState;
 }
 
 class TaskEdit extends React.Component<Props, State> {
@@ -25,17 +26,15 @@ class TaskEdit extends React.Component<Props, State> {
 
     const {title, note, important, due_at} = props.task;
 
+    // draft-js
+    const editorContent = ContentState.createFromText(note);
+    const editorState = EditorState.createWithContent(editorContent);
+
     this.state = {
       title, note, important, due_at,
-      showNote: !!note
+      showNote: !!note,
+      editorState
     };
-
-    this.deleteTask = this.deleteTask.bind(this);
-    this.toggleImportance = this.toggleImportance.bind(this);
-    this.setDueDate = this.setDueDate.bind(this);
-    this.toggleNoteInput = this.toggleNoteInput.bind(this);
-    this.onTitleInput = this.onTitleInput.bind(this);
-    this.onNoteInput = this.onNoteInput.bind(this);
   }
 
   updateTask(props) {
@@ -48,21 +47,24 @@ class TaskEdit extends React.Component<Props, State> {
     this.props.crud.delete(task);
   }
 
-  onTitleInput(e: ChangeEvent<HTMLInputElement>) {    
+  onTitleChange(e: ChangeEvent<HTMLInputElement>) {    
     const props = { title: e.target.value };
     this.updateTask(props);
   }
   
-  onNoteInput(e: FormEvent<HTMLSpanElement>) {        
-    const props = { note: (e.target as HTMLSpanElement).innerHTML };
+  onNoteChange(editorState) {
+    const note = editorState.getCurrentContent().getPlainText();
+    const props = { note };
+    
+    this.setState({ editorState });
     this.updateTask(props);
   }
 
-  toggleNoteInput(e: MouseEvent<HTMLButtonElement>) {
+  toggleNoteInput() {
     this.setState({ showNote: !this.state.showNote });
   }
 
-  toggleImportance(e: MouseEvent<HTMLButtonElement>) {
+  toggleImportance() {
     const props = { important: !this.state.important };
     this.updateTask(props);
   }
@@ -113,7 +115,7 @@ class TaskEdit extends React.Component<Props, State> {
               name="title"
               placeholder='Title'
               value={title}
-              onChange={this.onTitleInput}
+              onChange={e => this.onTitleChange(e)}
               autoFocus
             />
           </div>
@@ -121,12 +123,9 @@ class TaskEdit extends React.Component<Props, State> {
             this.state.showNote
               ? (
                 <div className="note-input">
-                  <span
-                    //@ts-ignore
-                    name="note"
-                    placeholder='Note'
-                    onInput={this.onNoteInput}
-                    contentEditable
+                  <Editor 
+                    editorState={this.state.editorState} 
+                    onChange={eState => this.onNoteChange(eState)}
                   />
                 </div>
               ) : null
@@ -139,7 +138,7 @@ class TaskEdit extends React.Component<Props, State> {
                 className="task-option"
                 //@ts-ignore
                 active={note ? "" : undefined}
-                onClick={this.toggleNoteInput}
+                onClick={() => this.toggleNoteInput()}
               >
                 <AlignJustify size="100%" fill=""/>
               </button>
@@ -149,14 +148,14 @@ class TaskEdit extends React.Component<Props, State> {
                 className="task-option"
                 //@ts-ignore
                 active={important ? "" : undefined}
-                onClick={this.toggleImportance}
+                onClick={() => this.toggleImportance()}
               >
                 <Star size="100%" fill=""/>
               </button>
 
               <DatePicker
                 selected={dueDate || new Date()}
-                onChange={this.setDueDate}
+                onChange={e => this.setDueDate(e)}
                 customInput={<CalendarButton/>}
               />
 
@@ -165,7 +164,7 @@ class TaskEdit extends React.Component<Props, State> {
 
               <button
                 className="action-button"
-                onClick={this.deleteTask}
+                onClick={() => this.deleteTask()}
               >
                 Delete
               </button>
@@ -173,7 +172,7 @@ class TaskEdit extends React.Component<Props, State> {
               <button
                 title="Done"
                 className="action-button button-primary"
-                onClick={this.props.closeEdit}
+                onClick={() => this.props.closeEdit()}
               >
                 <Check size="16px"/>
               </button>
