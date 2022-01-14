@@ -5,7 +5,7 @@ import { Star, Calendar } from 'react-feather';
 
 class TaskDisplay extends React.Component<{task: TaskInterface}> {
   render() {
-    const { title, note, important, due_at:dueAt } = this.props.task;
+    const { title, note, important, completed, due_at:dueAt } = this.props.task;
     const dueDate = dueAt ? new Date(dueAt) : null;
 
     return (
@@ -21,7 +21,7 @@ class TaskDisplay extends React.Component<{task: TaskInterface}> {
               ) : null
           }
           {
-            important || dueDate
+            !completed && (important || dueDate)
               ? (
                 <div className="task-bar">
                   <div className="task-options">

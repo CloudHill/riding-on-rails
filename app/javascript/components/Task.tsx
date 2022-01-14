@@ -47,6 +47,8 @@ class Task extends React.Component<Props> {
         className={"task" + (editing ? " task-editing" : "")} 
         tabIndex={0}
         onFocus={this.onFocus}
+        //@ts-ignore
+        completed={completed ? "" : undefined}
       >
         <div className="checkbox">
           <button

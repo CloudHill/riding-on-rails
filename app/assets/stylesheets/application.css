@@ -19,7 +19,7 @@
 :root {
   --border-radius_1: 12px;
   --border-radius_2: 4px;
-  --note-foreground: #666;
+  --secondary-foreground: #666;
   --task-background: #f0f0f0;
   --task-background_hover: #f3f3f3;
   --button-background: #dfdfdf;
@@ -94,7 +94,7 @@ input, textarea {
 }
 
 .task-note {
-  color: var(--note-foreground);
+  color: var(--secondary-foreground);
   font-size: 0.8em;
   margin-top: 5px;
   white-space: pre-line;
@@ -140,6 +140,19 @@ input, textarea {
 .note-input span[contenteditable]:empty::before {
   content: "Note";
   color: gray;
+}
+
+/* completed task */
+
+.task[completed] {
+  order: 1;
+}
+
+.task[completed] .task-title,
+.task[completed] .title-input input,
+.task[completed] .note-input {
+  color: var(--secondary-foreground);
+  text-decoration: line-through;
 }
 
 /* task bar */
