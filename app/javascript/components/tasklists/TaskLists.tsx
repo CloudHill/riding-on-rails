@@ -4,7 +4,15 @@ import TaskListInterface from './TaskListInterface';
 import AddTaskList from './AddTaskList';
 import { getCsrfToken } from '../../helpers';
 
-class TaskLists extends React.Component<{}, { taskLists: TaskListInterface[] }> {
+interface Props {
+  setList: (number) => void
+}
+
+interface State { 
+  taskLists: TaskListInterface[] 
+}
+
+class TaskLists extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
@@ -55,7 +63,11 @@ class TaskLists extends React.Component<{}, { taskLists: TaskListInterface[] }> 
     const { taskLists } = this.state;
 
     const allTaskLists = taskLists.map(list => (
-      <TaskList key={list.id} taskList={list} />
+      <TaskList 
+        setList={this.props.setList} 
+        key={list.id} 
+        taskList={list}
+      />
     ));
 
     return (

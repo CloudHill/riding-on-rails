@@ -1,11 +1,11 @@
 import React from 'react';
 import TaskLists from './tasklists/TaskLists';
 
-class Nav extends React.Component {
+class Nav extends React.Component<{ setList: (number) => void }> {
   render() {
     return (
       <div className="navbar">
-        <TaskLists />
+        <TaskLists setList={this.props.setList}/>
       </div>
     )
   }

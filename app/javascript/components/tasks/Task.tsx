@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FocusEvent } from 'react';
 import TaskInterface from './TaskInterface';
 import TaskEdit from './TaskEdit';
 import TaskDisplay from './TaskDisplay';
@@ -32,7 +32,7 @@ class Task extends React.Component<Props> {
     this.props.editTask(null);
   }
 
-  onFocus(e: React.FocusEvent<HTMLDivElement, Element>) {
+  onFocus(e: FocusEvent<HTMLDivElement, Element>) {
     const {editing, task} = this.props;
     if (editing) return;
     this.props.editTask(task.id);

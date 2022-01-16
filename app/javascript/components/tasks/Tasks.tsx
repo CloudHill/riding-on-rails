@@ -5,12 +5,16 @@ import TaskInterface from "./TaskInterface";
 import { getCsrfToken } from "../../helpers";
 import TaskListInterface from "../tasklists/TaskListInterface";
 
+interface Props { 
+  activeList: number
+}
+
 interface State {
   taskList: TaskListInterface, 
   editing: number
 }
 
-class Tasks extends React.Component<{ activeList: number }, State> {
+class Tasks extends React.Component<Props, State> {
   tasksRef: React.RefObject<HTMLDivElement>;
 
   constructor(props) {
@@ -35,8 +39,18 @@ class Tasks extends React.Component<{ activeList: number }, State> {
     this.editTask = this.editTask.bind(this);
   }
 
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.activeList !== this.props.activeList) {
+      this.getTaskList();
+    }
+  }
+
   componentDidMount() {
-    const url = "/api/v1/task_lists/" + this.props.activeList;
+    this.getTaskList();
+  }
+
+  getTaskList() {
+    const url = "/api/v1/task_lists/" + this.props.activeList;    
 
     fetch(url)
       .then(response => {
@@ -135,6 +149,7 @@ class Tasks extends React.Component<{ activeList: number }, State> {
 
   render() {
     const { taskList } = this.state;
+    const { tasks } = taskList;
     
     const crudTasks = { 
       add: this.addTask,
@@ -142,7 +157,12 @@ class Tasks extends React.Component<{ activeList: number }, State> {
       delete: this.deleteTask
     }
 
-    const allTasks = taskList.tasks.map(task => (
+    // sort tasks by created_at (desc)
+    const sortedTasks = tasks.sort((a, b) => 
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+
+    const allTasks = sortedTasks.map(task => (
       <Task key={task.id} 
         task={task} 
         crud={crudTasks}
