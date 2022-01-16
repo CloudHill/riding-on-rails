@@ -23,6 +23,7 @@
   --nav-background: #f0f0f0;
   --task-background: #f0f0f0;
   --task-background_hover: #f3f3f3;
+  --tasklist-background: #e7e7e7;
   --button-background: #dfdfdf;
   --accent-color: rgb(250, 110, 110);
   --accent-foreground: black;
@@ -52,14 +53,9 @@ input, textarea {
   display: flex;
 }
 
-/* nav */
-
-.navbar {
-  background: var(--nav-background);
-  width: 260px;
-}
-
-/* task list */
+/* 
+ * TASKS 
+ */
 
 .tasks-container {
   flex: 1;
@@ -73,8 +69,6 @@ input, textarea {
   flex: 1;
   overflow-y: scroll;
 }
-
-/* task */
 
 .task, .add-task {
   background: var(--task-background);  
@@ -274,4 +268,23 @@ span.clear-input {
   vertical-align: center;
   border: 3px solid var(--accent-color);
   border-radius: 50%;
+}
+
+
+/* 
+ * NAV 
+ */
+
+.navbar {
+  background: var(--nav-background);
+  width: 260px;
+  padding: 16px;
+}
+
+/* task list */
+
+.tasklist {
+  padding: 8px;
+  background: var(--tasklist-background);
+  border-radius: var(--border-radius_2);
 }
