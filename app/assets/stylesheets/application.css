@@ -17,13 +17,14 @@
  */
 
 :root {
-  --border-radius_1: 12px;
+  --border-radius_1: 8px;
   --border-radius_2: 4px;
   --secondary-foreground: #666;
   --nav-background: #f0f0f0;
   --task-background: #f0f0f0;
   --task-background_hover: #f3f3f3;
   --tasklist-background: #e7e7e7;
+  --tasklist-background_hover: #eaeaea;
   --button-background: #dfdfdf;
   --accent-color: rgb(250, 110, 110);
   --accent-foreground: black;
@@ -70,18 +71,11 @@ input, textarea {
   overflow-y: scroll;
 }
 
-.task, .add-task {
+.task {
+  display: flex;
+  padding: 8px;
   background: var(--task-background);  
   border-radius: var(--border-radius_1);
-  display: flex;
-}
-
-.task {
-  padding: 8px;
-}
-
-.add-task {
-  padding: 8px 16px;
 }
 
 .task {
@@ -89,7 +83,7 @@ input, textarea {
   border: 2px solid transparent;
 }
 
-.task:hover, .add-task:hover {
+.task:hover {
   background: var(--task-background_hover)
 }
 
@@ -222,7 +216,15 @@ span.clear-input {
 /* add task */
 
 .add-task {
+  display: flex;
   margin-top: 20px;
+  padding: 8px 8px 8px 16px;
+  background: var(--task-background);  
+  border-radius: var(--border-radius_1);
+}
+
+.add-task:hover {
+  background: var(--task-background_hover)
 }
 
 .add-task_input {
@@ -242,8 +244,13 @@ span.clear-input {
   border-radius: var(--border-radius_2);
   border: none;
   outline: none;
+  min-width: 30px;
   height: 30px;
   padding: 2px 8px;
+}
+
+.action-add {
+  width: 30px;
 }
 
 .button-primary {
@@ -283,8 +290,46 @@ span.clear-input {
 
 /* task list */
 
+.tasklists-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.tasklists {
+  flex: 1;
+  overflow-y: scroll;
+}
+
 .tasklist {
-  padding: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
   background: var(--tasklist-background);
   border-radius: var(--border-radius_2);
+}
+
+.tasklist:hover {
+  background: var(--tasklist-background_hover);
+}
+
+/* add task list */
+
+.add-tasklist {
+  display: flex;
+  margin-top: 20px;
+  padding: 8px 8px 8px 16px;
+  background: var(--tasklist-background);  
+  border-radius: var(--border-radius_2);
+}
+
+.add-tasklist:hover {
+  background: var(--tasklist-background_hover)
+}
+
+.add-tasklist_input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  min-width: 0;
 }
