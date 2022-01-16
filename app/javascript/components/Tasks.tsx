@@ -23,7 +23,7 @@ class Tasks extends React.Component<{}, { tasks: TaskInterface[], editing: numbe
   }
 
   componentDidMount() {
-    const url = "/api/v1/tasks/index";
+    const url = "/api/v1/tasks";
     fetch(url)
       .then(response => {
         if (response.ok) return response.json();
