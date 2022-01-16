@@ -3,16 +3,29 @@ import AddTask from "./AddTask";
 import Task from "./Task";
 import TaskInterface from "./TaskInterface";
 import { getCsrfToken } from "../../helpers";
+import TaskListInterface from "../tasklists/TaskListInterface";
 
-class Tasks extends React.Component<{}, { tasks: TaskInterface[], editing: number }> {
+interface State {
+  taskList: TaskListInterface, 
+  editing: number
+}
+
+class Tasks extends React.Component<{ activeList: number }, State> {
   tasksRef: React.RefObject<HTMLDivElement>;
 
   constructor(props) {
     super(props);
+
+    const taskList = {
+      id: 0,
+      name: "Tasks",
+      tasks: []
+    }
+
     this.state = {
-      tasks: [],
+      taskList, 
       editing: null
-    };
+    }
 
     this.tasksRef = React.createRef();
 
@@ -23,13 +36,14 @@ class Tasks extends React.Component<{}, { tasks: TaskInterface[], editing: numbe
   }
 
   componentDidMount() {
-    const url = "/api/v1/tasks";
+    const url = "/api/v1/task_lists/" + this.props.activeList;
+
     fetch(url)
       .then(response => {
         if (response.ok) return response.json();
         throw new Error("Network response was not ok.");
       })
-      .then(response => this.setState({ tasks: response }))
+      .then(response => this.setState({ taskList: response }))
       .catch(() => this.context.history.push("/"));
   }
 
@@ -51,10 +65,11 @@ class Tasks extends React.Component<{}, { tasks: TaskInterface[], editing: numbe
         throw new Error("Network response was not ok.");
       })
       .then(response => {
+        const { taskList } = this.state;
         const newTask = response as TaskInterface;
-        const tasks = [newTask].concat(this.state.tasks);
+        const tasks = [newTask].concat(taskList.tasks);
 
-        this.setState({tasks});        
+        this.setState({ taskList : {...taskList, tasks }});
         this.tasksRef.current.scrollTo(0, 0); // scroll to top
       })
       .catch(error => console.log(error.message));
@@ -78,10 +93,12 @@ class Tasks extends React.Component<{}, { tasks: TaskInterface[], editing: numbe
         throw new Error("Network response was not ok.");
       })
       .then(response => {
-        const tasks = this.state.tasks.map(
+        const { taskList } = this.state;
+        const tasks = taskList.tasks.map(
           t => t.id === task.id ? response : t
         );
-        this.setState({tasks});
+
+        this.setState({ taskList : {...taskList, tasks }});
       })
       .catch(error => console.log(error.message));
   }
@@ -102,8 +119,12 @@ class Tasks extends React.Component<{}, { tasks: TaskInterface[], editing: numbe
         throw new Error("Network response was not ok.");
       })
       .then(response => {
-        const tasks = this.state.tasks.filter(({id}) => id !== task.id);
-        this.setState({tasks});
+        const { taskList } = this.state;
+        const tasks = taskList.tasks.filter(
+          ({id}) => id !== task.id
+        );
+
+        this.setState({ taskList : {...taskList, tasks }});
       })
       .catch(error => console.log(error.message));
   }
@@ -113,14 +134,15 @@ class Tasks extends React.Component<{}, { tasks: TaskInterface[], editing: numbe
   }
 
   render() {
-    const { tasks } = this.state;
+    const { taskList } = this.state;
+    
     const crudTasks = { 
       add: this.addTask,
       update: this.updateTask,
       delete: this.deleteTask
     }
 
-    const allTasks = tasks.map(task => (
+    const allTasks = taskList.tasks.map(task => (
       <Task key={task.id} 
         task={task} 
         crud={crudTasks}
@@ -131,7 +153,9 @@ class Tasks extends React.Component<{}, { tasks: TaskInterface[], editing: numbe
     
     return (
       <div className="tasks-container">
-        <h1>Tasks</h1>
+        <h1>
+          {taskList.name}
+        </h1>
         <div ref={this.tasksRef} className="tasks">
           {allTasks}
         </div>
