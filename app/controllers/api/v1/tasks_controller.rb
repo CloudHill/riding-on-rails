@@ -4,6 +4,14 @@ class Api::V1::TasksController < ApplicationController
     render json: tasks
   end
 
+  def show
+    if (task)
+      render json: task
+    else
+      render json: task.errors
+    end
+  end
+
   def create
     task = Task.create!(task_params)
     if (task)
