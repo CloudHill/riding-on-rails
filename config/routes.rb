@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
+      get 'task_lists', to: 'task_lists#index'
+      get 'task_lists/:id', to: 'task_lists#show'
+      post 'task_lists', to: 'task_lists#create'
+      patch 'task_lists/:id', to: 'task_lists#update'
+      delete 'task_lists/:id', to: 'task_lists#destroy'
+      
       get 'tasks', to: 'tasks#index'
       get 'tasks/:id', to: 'tasks#show'
       post 'tasks', to: 'tasks#create'
