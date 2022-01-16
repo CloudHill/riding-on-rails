@@ -1,6 +1,6 @@
 import React from 'react';
 import TaskInterface from './TaskInterface';
-import { formatDate } from '../helpers';
+import { formatDate } from '../../helpers';
 import { Star, Calendar } from 'react-feather';
 
 class TaskDisplay extends React.Component<{task: TaskInterface}> {

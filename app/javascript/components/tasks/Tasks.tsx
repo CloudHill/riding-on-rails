@@ -2,7 +2,7 @@ import React from "react";
 import AddTask from "./AddTask";
 import Task from "./Task";
 import TaskInterface from "./TaskInterface";
-import { getCsrfToken } from "../helpers";
+import { getCsrfToken } from "../../helpers";
 
 class Tasks extends React.Component<{}, { tasks: TaskInterface[], editing: number }> {
   tasksRef: React.RefObject<HTMLDivElement>;

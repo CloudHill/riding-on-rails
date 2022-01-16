@@ -1,5 +1,5 @@
 import React from 'react';
-import Tasks from './Tasks';
+import Tasks from './tasks/Tasks';
 import Nav from './Nav';
 
 export default () => (

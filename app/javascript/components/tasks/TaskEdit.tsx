@@ -3,7 +3,7 @@ import TaskInterface from './TaskInterface';
 import DatePicker from 'react-datepicker';
 import { Check, Star, Calendar, AlignJustify, X } from 'react-feather';
 import { Editor, EditorState, ContentState } from 'draft-js';
-import { formatDate } from '../helpers';
+import { formatDate } from '../../helpers';
 
 interface Props {
   task: TaskInterface;
