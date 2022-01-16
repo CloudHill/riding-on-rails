@@ -20,6 +20,7 @@
   --border-radius_1: 12px;
   --border-radius_2: 4px;
   --secondary-foreground: #666;
+  --nav-background: #f0f0f0;
   --task-background: #f0f0f0;
   --task-background_hover: #f3f3f3;
   --button-background: #dfdfdf;
@@ -38,6 +39,7 @@ body {
   -webkit-user-select: none;
   user-select: none;
 }
+
 body, textarea { 
   font-family: sans-serif;
 }
@@ -46,9 +48,21 @@ input, textarea {
   font-size: 1em;
 }
 
+#app {
+  display: flex;
+}
+
+/* nav */
+
+.navbar {
+  background: var(--nav-background);
+  width: 260px;
+}
+
 /* task list */
 
 .tasks-container {
+  flex: 1;
   height: 100vh;
   display: flex;
   flex-direction: column;
