@@ -171,7 +171,7 @@ class TaskEdit extends React.Component<Props, State> {
 
               <button
                 title="Done"
-                className="action-button button-primary"
+                className="action-button icon-button button-primary"
                 onClick={() => this.props.closeEdit()}
               >
                 <Check size="16px"/>

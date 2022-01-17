@@ -63,7 +63,7 @@ input, textarea {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 16px;
 }
 
 .tasks {
@@ -244,12 +244,11 @@ span.clear-input {
   border-radius: var(--border-radius_2);
   border: none;
   outline: none;
-  min-width: 30px;
   height: 30px;
   padding: 2px 8px;
 }
 
-.action-add {
+.icon-button {
   width: 30px;
 }
 

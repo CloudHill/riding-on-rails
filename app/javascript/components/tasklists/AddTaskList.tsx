@@ -42,10 +42,9 @@ class AddTaskList extends React.Component<{ newList }, TaskListInterface> {
           className="add-tasklist_input"
           placeholder="New list"
           onChange={this.onChange}
-          autoFocus
         />
         <div className="actions">
-          <button title="Add task list" type="submit" className="action-button action-add">
+          <button title="Add task list" type="submit" className="action-button icon-button action-add">
             <Plus size="100%"/>
           </button>
         </div>

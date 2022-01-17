@@ -49,7 +49,7 @@ class AddTask extends React.Component<{crud: {add}}, TaskInterface> {
           autoFocus
         />
         <div className="actions">
-          <button title="Add task" type="submit" className="action-button action-add">
+          <button title="Add task" type="submit" className="action-button icon-button action-add">
             <Plus size="100%"/>
           </button>
         </div>
