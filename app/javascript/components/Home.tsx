@@ -13,7 +13,8 @@ const hiddenContextMenu = {
   showContextMenu: false,
   contextMenuOptions: {
     anchor: {x: 0, y: 0},
-    menuItems: []
+    menuItems: [],
+    content: null
   }
 }
 
@@ -36,8 +37,8 @@ class Home extends React.Component<{}, State> {
   showContextMenu(options: ContextMenuProps) {
     this.setState({ 
       contextMenuOptions: options, 
-      showContextMenu: true }
-    );
+      showContextMenu: true
+    });
   }
 
   setActiveList(id: number) {
@@ -45,12 +46,13 @@ class Home extends React.Component<{}, State> {
   }
 
   onDocumentClick() {
-    this.setState(hiddenContextMenu);
+    if (this.state.showContextMenu)
+      this.setState(hiddenContextMenu);
   }
 
   render() {
     const { activeListId, showContextMenu, contextMenuOptions } = this.state;
-    const { anchor, menuItems } = contextMenuOptions;
+    const { anchor, menuItems, content } = contextMenuOptions;
     
     const activeList = {
       activeListId, 
@@ -63,7 +65,7 @@ class Home extends React.Component<{}, State> {
         <Tasks activeList={activeListId}/>
         { 
           showContextMenu
-            ? <ContextMenu anchor={anchor} menuItems={menuItems} />
+            ? <ContextMenu anchor={anchor} menuItems={menuItems} content={content} />
             : null
         }
       </>

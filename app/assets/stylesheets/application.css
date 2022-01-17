@@ -284,6 +284,7 @@ span.clear-input {
 
 .navbar {
   background: var(--nav-background);
+  height: 100vh;
   width: 260px;
   padding: 16px;
 }
@@ -377,21 +378,29 @@ span.clear-input {
   border-radius: var(--border-radius_1);
 }
 
-.context-button {
+.context-items {
+  padding: 0;
+  list-style: none;
+  margin: 0;
+}
+
+.context-items > li {
+  margin-bottom: 4px;
+}
+
+.context-items > li:last-child {
+  margin-bottom: 0;
+}
+
+.context-items button {
   width: 100%;
   border: none;
   outline: none;
   padding: 6px 10px;
-  margin-bottom: 4px;
   text-align: left;
   border-radius: var(--border-radius_2);
 }
-
-.context-button:last-child {
-  margin-bottom: 0;
-}
-
-.context-button:hover {
+.context-items button:hover {
   background-color: var(--button-background);
 }
 
