@@ -1,13 +1,19 @@
 import React from 'react';
 import TagInterface from './TagInterface';
 
-class Tag extends React.Component<{ tag: TagInterface }> {
+interface Props { 
+  tag: TagInterface 
+  onClick: (tag: TagInterface) => void;
+}
+
+class Tag extends React.Component<Props> {
   render() {
-    const { tag } = this.props;
+    const { tag, onClick } = this.props;
     return (
       <div 
         className="tag"
         style={{background: '#' + (tag.color || 'dfdfdf')}}
+        onClick={() => onClick(tag)}
       >
         {tag.name}
       </div>

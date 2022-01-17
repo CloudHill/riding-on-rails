@@ -20,6 +20,7 @@ class Task extends React.Component<Props> {
     this.completeTask = this.completeTask.bind(this);
     this.onFocus = this.onFocus.bind(this);
     this.closeEdit = this.closeEdit.bind(this);
+    this.addTag = this.addTag.bind(this);
   }
 
   completeTask() {
@@ -38,6 +39,10 @@ class Task extends React.Component<Props> {
     const {editing, task} = this.props;
     if (editing) return;
     this.props.editTask(task.id);
+  }
+
+  addTag(tag: TaskInterface) {
+    
   }
 
   render() {
@@ -67,7 +72,7 @@ class Task extends React.Component<Props> {
             ? <TaskDisplay task={task}/>
             : <TaskEdit
                 task={task}
-                crud={this.props.crud}
+                crud={{ ...this.props.crud, addTag: this.addTag }}
                 closeEdit={this.closeEdit}
                 showContextMenu={this.props.showContextMenu}
               />

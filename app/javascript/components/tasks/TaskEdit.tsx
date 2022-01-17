@@ -9,7 +9,7 @@ import TagList from '../tags/TagList';
 
 interface Props {
   task: TaskInterface;
-  crud: { delete, update };
+  crud: { delete, update, addTag };
   closeEdit: () => void;
   showContextMenu: (options: ContextMenuProps) => void;
 }
@@ -86,7 +86,7 @@ class TaskEdit extends React.Component<Props, State> {
         x: rect.x + (rect.width / 2),
         y: rect.y + (rect.height / 2),
       },
-      content: <TagList/>
+      content: <TagList onClick={this.props.crud.addTag}/>
     });
   }
 

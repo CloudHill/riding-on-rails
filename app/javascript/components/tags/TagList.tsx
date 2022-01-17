@@ -4,7 +4,11 @@ import Tag from './Tag';
 import TagInterface from './TagInterface';
 import { getCsrfToken } from '../../helpers';
 
-class TagList extends React.Component<{}, { tags: TagInterface[] }> {
+interface Props {
+  onClick: (tag: TagInterface) => void;
+}
+
+class TagList extends React.Component<Props, { tags: TagInterface[] }> {
   constructor(props) {
     super(props)
     this.state = {
@@ -55,7 +59,11 @@ class TagList extends React.Component<{}, { tags: TagInterface[] }> {
   render() {
     const { tags } = this.state;
     const allTags = tags.map(tag => (
-      <Tag key={tag.id} tag={tag}/>
+      <Tag 
+        key={tag.id} 
+        tag={tag} 
+        onClick={this.props.onClick}
+      />
     ));
       
     return (
