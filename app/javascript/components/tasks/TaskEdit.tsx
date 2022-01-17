@@ -1,14 +1,17 @@
-import React, { ChangeEvent, forwardRef } from 'react';
+import React, { ChangeEvent, MouseEvent, forwardRef } from 'react';
 import TaskInterface from './TaskInterface';
 import DatePicker from 'react-datepicker';
-import { Check, Star, Calendar, AlignJustify, X } from 'react-feather';
+import { Check, Star, Calendar, AlignJustify, X, Tag } from 'react-feather';
 import { Editor, EditorState, ContentState } from 'draft-js';
 import { formatDate } from '../../helpers';
+import { ContextMenuProps } from '../ContextMenu';
+import TagList from '../tags/TagList';
 
 interface Props {
   task: TaskInterface;
   crud: { delete, update };
   closeEdit: () => void;
+  showContextMenu: (options: ContextMenuProps) => void;
 }
 
 interface State {
@@ -74,6 +77,19 @@ class TaskEdit extends React.Component<Props, State> {
     this.updateTask(props);
   }
 
+  showTagList(e:MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
+    const rect = (e.target as HTMLButtonElement).getBoundingClientRect();
+    
+    this.props.showContextMenu({
+      anchor: {
+        x: rect.x + (rect.width / 2),
+        y: rect.y + (rect.height / 2),
+      },
+      content: <TagList/>
+    });
+  }
+
   render() {
     const {title, note, important, due_at:dueAt} = this.state;
     const dueDate = dueAt ? new Date(dueAt) : null;
@@ -82,6 +98,7 @@ class TaskEdit extends React.Component<Props, State> {
     const CalendarButton = forwardRef(({ value, onClick }, ref) => (
       //@ts-ignore
       <button ref={ref}
+        title="Due Date"
         className="task-option"
         onClick={onClick} 
         active={dueDate ? "" : undefined}
@@ -158,6 +175,14 @@ class TaskEdit extends React.Component<Props, State> {
                 onChange={e => this.setDueDate(e)}
                 customInput={<CalendarButton/>}
               />
+
+              <button
+                title="Tag"
+                className="task-option"
+                onClick={e => this.showTagList(e)}
+              >
+                <Tag size="100%" fill=""/>
+              </button>
 
             </div>
             <div className="task-actions">

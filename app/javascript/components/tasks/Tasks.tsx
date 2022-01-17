@@ -4,14 +4,16 @@ import Task from "./Task";
 import TaskInterface from "./TaskInterface";
 import { getCsrfToken } from "../../helpers";
 import TaskListInterface from "../tasklists/TaskListInterface";
+import { ContextMenuProps } from "../ContextMenu";
 
 interface Props { 
-  activeList: number
+  activeList: number;
+  showContextMenu: (options: ContextMenuProps) => void;
 }
 
 interface State {
-  taskList: TaskListInterface, 
-  editing: number
+  taskList: TaskListInterface;
+  editing: number;
 }
 
 class Tasks extends React.Component<Props, State> {
@@ -170,6 +172,7 @@ class Tasks extends React.Component<Props, State> {
         crud={crudTasks}
         editing={this.state.editing === task.id}
         editTask={this.editTask}
+        showContextMenu={this.props.showContextMenu}
       />
     ));
     

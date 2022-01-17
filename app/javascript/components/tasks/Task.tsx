@@ -3,12 +3,14 @@ import TaskInterface from './TaskInterface';
 import TaskEdit from './TaskEdit';
 import TaskDisplay from './TaskDisplay';
 import { Check } from 'react-feather';
+import { ContextMenuProps } from '../ContextMenu';
 
 interface Props {
-  task: TaskInterface, 
-  crud: { delete, update },
-  editing: boolean,
-  editTask: (id: number) => void
+  task: TaskInterface;
+  crud: { delete, update };
+  editing: boolean;
+  editTask: (id: number) => void;
+  showContextMenu: (options: ContextMenuProps) => void;
 };
 
 class Task extends React.Component<Props> {
@@ -67,6 +69,7 @@ class Task extends React.Component<Props> {
                 task={task}
                 crud={this.props.crud}
                 closeEdit={this.closeEdit}
+                showContextMenu={this.props.showContextMenu}
               />
         }
       </div>

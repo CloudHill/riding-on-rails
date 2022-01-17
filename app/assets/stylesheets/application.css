@@ -366,7 +366,9 @@ span.clear-input {
   border: none;
 }
 
-/* context menu */
+/* 
+ * CONTEXT MENU 
+ */
 
 .context-menu {
   padding: 4px;
@@ -404,4 +406,22 @@ span.clear-input {
   background-color: var(--button-background);
 }
 
+/* 
+ * TAGS 
+ */
 
+ .tag-search {
+   font-size: 14px;
+   width: 100%;
+   background: var(--input-background);
+   padding: 6px;
+   border-radius: var(--border-radius_2);
+ }
+ 
+ .tag-search input {
+   width: 100%;
+   min-width: 0;
+   background: transparent;
+   outline: none;
+   border: none;
+ }
