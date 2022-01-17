@@ -4,7 +4,10 @@ import TaskListInterface from './TaskListInterface';
 
 interface Props { 
   taskList: TaskListInterface;
-  setList: (id: number) => void;
+  activeList: {
+    activeListId: number;
+    setActiveList: (id: number) => void;
+  };
   showContextMenu: (options: ContextMenuProps) => void;
   crud: { rename, delete };
 }
@@ -24,8 +27,8 @@ class TaskList extends React.Component<Props, State> {
   }
   
   onClick() {
-    const { id } = this.props.taskList;
-    this.props.setList(id);    
+    const { taskList: { id }, activeList: { setActiveList } } = this.props;
+    setActiveList(id);    
   }
 
   onContextMenu(e:MouseEvent<HTMLDivElement>) {
@@ -72,13 +75,17 @@ class TaskList extends React.Component<Props, State> {
 
 
   render() {
-    const { name } = this.props.taskList;
+    const { taskList: { id, name }, activeList: { activeListId } } = this.props;
+    const active = id === activeListId;
+
     return (
       <div
         className="tasklist"
         tabIndex={0}
         onClick={() => this.onClick()}
         onContextMenu={e => this.onContextMenu(e)}
+        //@ts-ignore
+        active={active ? "" : undefined}
       >
         {
           !this.state.editing

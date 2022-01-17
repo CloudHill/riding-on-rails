@@ -320,6 +320,10 @@ span.clear-input {
   vertical-align: middle;
 }
 
+.tasklist[active] .tasklist-title{
+  font-weight: 700;
+}
+
 /* add task list */
 
 .add-tasklist {

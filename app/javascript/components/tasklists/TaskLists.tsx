@@ -135,11 +135,11 @@ class TaskLists extends React.Component<Props, State> {
     }
 
     const allTaskLists = taskLists.map(list => {
-      const { activeList, showContextMenu } = this.props;
+      const { activeList, showContextMenu } = this.props;      
       return (
         <TaskList 
           key={list.id}
-          setList={activeList.setActiveList}
+          activeList={activeList}
           taskList={list}
           showContextMenu={showContextMenu}
           crud={crudTaskLists}
