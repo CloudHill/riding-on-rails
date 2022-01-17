@@ -2,6 +2,7 @@ import React from 'react';
 import SearchTag from './SearchTag';
 import Tag from './Tag';
 import TagInterface from './TagInterface';
+import { getCsrfToken } from '../../helpers';
 
 class TagList extends React.Component<{}, { tags: TagInterface[] }> {
   constructor(props) {
@@ -9,6 +10,8 @@ class TagList extends React.Component<{}, { tags: TagInterface[] }> {
     this.state = {
        tags: []
     }
+
+    this.createTag = this.createTag.bind(this);
   }
 
   componentDidMount() {
@@ -22,17 +25,47 @@ class TagList extends React.Component<{}, { tags: TagInterface[] }> {
       .then(response => this.setState({ tags: response }))
       .catch(() => this.context.history.push("/"));
   }
+
+  createTag(tag: TagInterface) {
+    const url = "/api/v1/tags";
+    const token = getCsrfToken();    
+    
+    // create task
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(tag)
+    })
+      .then(response => {
+        if (response.ok) return response.json();
+        throw new Error("Network response was not ok.");
+      })
+      .then(response => {
+        const newTag = response as TagInterface;
+        const tags = this.state.tags.concat([newTag]);
+
+        this.setState({tags});
+      })
+      .catch(error => console.log(error.message));
+  }
   
   render() {
     const { tags } = this.state;
     const allTags = tags.map(tag => (
-      <Tag tag={tag}/>
+      <Tag key={tag.id} tag={tag}/>
     ));
       
     return (
-      <div className="tag-list">
-        <SearchTag/>
-        {allTags}
+      <div className="taglist-container">
+        <div className="taglist-header">
+          <SearchTag createTag={this.createTag}/>
+        </div>
+        <div className="taglist">
+          {allTags}
+        </div>
       </div>
     )
   }

@@ -372,7 +372,7 @@ span.clear-input {
 
 .context-menu {
   padding: 4px;
-  width: 150px;
+  min-width: 150px;
   margin: 0;
   position: absolute;
   box-shadow: 0 0 14px 0 #aaa;
@@ -402,6 +402,7 @@ span.clear-input {
   text-align: left;
   border-radius: var(--border-radius_2);
 }
+
 .context-items button:hover {
   background-color: var(--button-background);
 }
@@ -410,18 +411,42 @@ span.clear-input {
  * TAGS 
  */
 
- .tag-search {
-   font-size: 14px;
-   width: 100%;
-   background: var(--input-background);
-   padding: 6px;
-   border-radius: var(--border-radius_2);
- }
- 
- .tag-search input {
-   width: 100%;
-   min-width: 0;
-   background: transparent;
-   outline: none;
-   border: none;
- }
+.tag {
+  display: flex;
+  align-items: center;
+  height: 20px;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 14px;
+  padding: 0 8px;
+  border-radius: var(--border-radius_2);
+  margin: 2px;
+}
+
+.taglist-header {
+  display: flex;
+  margin-bottom: 4px;
+}
+
+.tag-search {
+  font-size: 14px;
+  width: 120px;
+  margin-right: 6px;
+  background: var(--input-background);
+  padding: 6px;
+  border-radius: var(--border-radius_2);
+}
+
+.tag-search input {
+  width: 100%;
+  min-width: 0;
+  background: transparent;
+  outline: none;
+  border: none;
+}
+
+.taglist {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 280px;
+}

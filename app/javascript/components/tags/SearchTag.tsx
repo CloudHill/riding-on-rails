@@ -1,6 +1,11 @@
 import React, { ChangeEvent } from 'react'
+import TagInterface from './TagInterface';
 
-class SearchTag extends React.Component<{}, { name: string }> {
+interface Props {
+  createTag: (TagInterface) => void
+}
+
+class SearchTag extends React.Component<Props, { name: string }> {
   constructor(props) {
     super(props)
     this.state = { name: "" }
@@ -9,18 +14,33 @@ class SearchTag extends React.Component<{}, { name: string }> {
   onChange(e:ChangeEvent<HTMLInputElement>) {
     const name = e.target.value;
     this.setState({ name });
-  }  
+  }
+
+  createTag() {
+    this.props.createTag({ name: this.state.name })
+    this.setState({ name: "" });  
+  }
 
   render() {
+    const { name } = this.state;
+
     return (
-      <div className="tag-search">
-        <input 
-          value={this.state.name}
-          placeholder='Add tag'
-          onChange={e => this.onChange(e)}
-          autoFocus
-        />
-      </div>
+      <>
+        <div className="tag-search">
+          <input 
+            value={name}
+            placeholder='Search tag'
+            onChange={e => this.onChange(e)}
+            autoFocus
+          />
+        </div>
+        <button 
+          className="action-button action-add"
+          onClick={() => this.createTag()}  
+        >
+          Create tag
+        </button>
+      </>
     )
   }
 }
