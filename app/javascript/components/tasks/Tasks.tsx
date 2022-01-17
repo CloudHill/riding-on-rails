@@ -40,9 +40,8 @@ class Tasks extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (prevProps.activeList !== this.props.activeList) {
+    if (prevProps.activeList !== this.props.activeList)
       this.getTaskList();
-    }
   }
 
   componentDidMount() {

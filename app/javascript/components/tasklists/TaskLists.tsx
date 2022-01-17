@@ -6,7 +6,10 @@ import { getCsrfToken } from '../../helpers';
 import { ContextMenuProps } from '../ContextMenu';
 
 interface Props {
-  setList: (id: number) => void
+  activeList: {
+    activeListId: number;
+    setActiveList: (id: number) => void;
+  };
   showContextMenu: (options: ContextMenuProps) => void;
 }
 
@@ -22,6 +25,8 @@ class TaskLists extends React.Component<Props, State> {
     };
 
     this.createTaskList = this.createTaskList.bind(this);
+    this.renameTaskList = this.renameTaskList.bind(this);
+    this.deleteTaskList = this.deleteTaskList.bind(this);
   }
 
   componentDidMount() {
@@ -54,9 +59,68 @@ class TaskLists extends React.Component<Props, State> {
       })
       .then(response => {
         const newList = response as TaskListInterface;
-        const taskLists = [newList].concat(this.state.taskLists);
+        const taskLists = this.state.taskLists.concat([newList]);
 
         this.setState({taskLists});
+      })
+      .catch(error => console.log(error.message));
+  }
+
+  renameTaskList(taskList: TaskListInterface, newName: string) {
+    const id = taskList.id;
+    const url = `/api/v1/task_lists/${id}`;   
+    const token = getCsrfToken();
+
+    fetch(url, {
+      method: "PATCH",
+      headers: {
+        "X-CSRF-Token": token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ name: newName })
+    })
+      .then(response => {
+        if (response.ok) return response.json();
+        throw new Error("Network response was not ok.");
+      })
+      .then(response => {
+        const { taskLists } = this.state;
+        // update list state
+        const lists = taskLists.map(
+          list => list.id === taskList.id ? response : list
+        );
+        this.setState({ taskLists: lists});
+      })
+      .catch(error => console.log(error.message));
+  }
+
+  deleteTaskList(taskList: TaskListInterface) {
+    const id = taskList.id;
+    const url = `/api/v1/task_lists/${id}`;
+    const token = getCsrfToken();
+
+    fetch(url, {
+      method: "DELETE",
+      headers: {
+        "X-CSRF-Token": token,
+      }
+    })
+      .then(response => {
+        if (response.ok) return response.json();
+        throw new Error("Network response was not ok.");
+      })
+      .then(response => {
+        const { taskLists } = this.state;
+        const { activeList: { activeListId, setActiveList } } = this.props;
+
+        // remove list from state
+        const lists = taskLists.filter(
+          ({id}) => id !== taskList.id
+        );
+        this.setState({ taskLists: lists});
+
+        // change to default list if the deleted list is active
+        if (activeListId === id) setActiveList(0);
       })
       .catch(error => console.log(error.message));
   }
@@ -64,14 +128,21 @@ class TaskLists extends React.Component<Props, State> {
   render() {
     const { taskLists } = this.state;
 
+    const crudTaskLists = { 
+      create: this.createTaskList,
+      rename: this.renameTaskList,
+      delete: this.deleteTaskList
+    }
+
     const allTaskLists = taskLists.map(list => {
-      const { setList, showContextMenu } = this.props;
+      const { activeList, showContextMenu } = this.props;
       return (
         <TaskList 
           key={list.id}
-          setList={setList}
+          setList={activeList.setActiveList}
           taskList={list}
           showContextMenu={showContextMenu}
+          crud={crudTaskLists}
         />
       )
     });
@@ -81,7 +152,7 @@ class TaskLists extends React.Component<Props, State> {
         <div className="tasklists">
           {allTaskLists}
         </div>
-        <AddTaskList newList={this.createTaskList}/>        
+        <AddTaskList crud={crudTaskLists}/>        
       </div>
     )
   }

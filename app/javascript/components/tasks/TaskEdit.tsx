@@ -109,8 +109,8 @@ class TaskEdit extends React.Component<Props, State> {
 
     return (
       (
-        <div className='task-edit_form'>
-          <div className="title-input">
+        <div className='task-edit-container'>
+          <div className="task-title-input">
             <input 
               name="title"
               placeholder='Title'
@@ -122,7 +122,7 @@ class TaskEdit extends React.Component<Props, State> {
           {
             this.state.showNote
               ? (
-                <div className="note-input">
+                <div className="task-note-input">
                   <Editor 
                     editorState={this.state.editorState} 
                     onChange={eState => this.onNoteChange(eState)}

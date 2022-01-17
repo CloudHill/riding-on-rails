@@ -41,21 +41,25 @@ class Home extends React.Component<{}, State> {
   }
 
   setActiveList(id: number) {
-    this.setState({ activeListId: id });    
+    this.setState({ activeListId: id });
   }
 
   onDocumentClick() {
-    console.log('test');
     this.setState(hiddenContextMenu);
   }
 
   render() {
     const { activeListId, showContextMenu, contextMenuOptions } = this.state;
     const { anchor, menuItems } = contextMenuOptions;
+    
+    const activeList = {
+      activeListId, 
+      setActiveList: this.setActiveList
+    }
 
     return (
       <>
-        <Nav setList={this.setActiveList} showContextMenu={this.showContextMenu}/>
+        <Nav activeList={activeList} showContextMenu={this.showContextMenu}/>
         <Tasks activeList={activeListId}/>
         { 
           showContextMenu

@@ -6,7 +6,7 @@ const initialState: TaskListInterface = {
   name: ""
 };
 
-class AddTaskList extends React.Component<{ newList }, TaskListInterface> {
+class AddTaskList extends React.Component<{ crud: { create } }, TaskListInterface> {
   constructor(props) {
     super(props);
     this.state = initialState;
@@ -29,7 +29,7 @@ class AddTaskList extends React.Component<{ newList }, TaskListInterface> {
     if (taskList.name.length == 0)
       return;
 
-    this.props.newList(taskList);
+    this.props.crud.create(taskList);
     this.setState(initialState);
   }
 
