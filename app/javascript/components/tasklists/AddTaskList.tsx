@@ -15,19 +15,16 @@ class AddTaskList extends React.Component<{ crud: { create } }, TaskListInterfac
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  
   onChange(e: ChangeEvent<HTMLInputElement>) {
-    const taskList = { name: this.state.name }
-    taskList[e.target.name] = e.target.value;
-    this.setState(taskList);
+    const name = e.target.value;
+    this.setState({ name });
   }
 
   onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
   
     const taskList = this.state;
-    if (taskList.name.length == 0)
-      return;
+    if (taskList.name.length == 0) return;
 
     this.props.crud.create(taskList);
     this.setState(initialState);
@@ -36,8 +33,7 @@ class AddTaskList extends React.Component<{ crud: { create } }, TaskListInterfac
   render() {
     return (
       <form className="add-tasklist" onSubmit={this.onSubmit}>
-        <input 
-          name="name"
+        <input
           value={this.state.name}
           className="add-tasklist_input"
           placeholder="New list"
