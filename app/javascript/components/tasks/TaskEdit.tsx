@@ -17,7 +17,7 @@ interface State {
   important: boolean;
   due_at:  null | Date;
   showNote: boolean;
-  editorState: EditorState;
+  editorState: typeof EditorState;
 }
 
 class TaskEdit extends React.Component<Props, State> {

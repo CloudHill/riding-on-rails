@@ -3,9 +3,11 @@ import TaskList from './TaskList';
 import TaskListInterface from './TaskListInterface';
 import AddTaskList from './AddTaskList';
 import { getCsrfToken } from '../../helpers';
+import { ContextMenuProps } from '../ContextMenu';
 
 interface Props {
-  setList: (number) => void
+  setList: (id: number) => void
+  showContextMenu: (options: ContextMenuProps) => void;
 }
 
 interface State { 
@@ -62,13 +64,17 @@ class TaskLists extends React.Component<Props, State> {
   render() {
     const { taskLists } = this.state;
 
-    const allTaskLists = taskLists.map(list => (
-      <TaskList 
-        setList={this.props.setList} 
-        key={list.id} 
-        taskList={list}
-      />
-    ));
+    const allTaskLists = taskLists.map(list => {
+      const { setList, showContextMenu } = this.props;
+      return (
+        <TaskList 
+          key={list.id}
+          setList={setList}
+          taskList={list}
+          showContextMenu={showContextMenu}
+        />
+      )
+    });
 
     return (
       <div className="tasklists-container">

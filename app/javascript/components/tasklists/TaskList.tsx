@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
+import { ContextMenuProps } from '../ContextMenu';
 import TaskListInterface from './TaskListInterface';
 
 interface Props { 
-  taskList: TaskListInterface,
-  setList: (number) => void
+  taskList: TaskListInterface;
+  setList: (id: number) => void;
+  showContextMenu: (options: ContextMenuProps) => void;
 }
 
 class TaskList extends React.Component<Props> {  
@@ -12,6 +14,21 @@ class TaskList extends React.Component<Props> {
     this.props.setList(id);    
   }
 
+  onContextMenu(e:MouseEvent<HTMLDivElement>) {
+    e.preventDefault();
+    this.props.showContextMenu({
+      anchor: {
+        x: e.pageX,
+        y: e.pageY
+      },
+      menuItems: [
+        { title: "Delete", action: () => console.log("Delete")},
+        { title: "Rename", action: () => console.log("Rename")},
+      ]
+    });
+  }
+
+
   render() {
     const { name } = this.props.taskList;
     return (
@@ -19,6 +36,7 @@ class TaskList extends React.Component<Props> {
         className="tasklist"
         tabIndex={0}
         onClick={() => this.onClick()}
+        onContextMenu={e => this.onContextMenu(e)}
       >
         { name }
       </div>

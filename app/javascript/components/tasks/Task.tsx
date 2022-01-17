@@ -8,7 +8,7 @@ interface Props {
   task: TaskInterface, 
   crud: { delete, update },
   editing: boolean,
-  editTask: (number) => void
+  editTask: (id: number) => void
 };
 
 class Task extends React.Component<Props> {

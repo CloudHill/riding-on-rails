@@ -29,6 +29,7 @@
   --accent-color: rgb(250, 110, 110);
   --accent-foreground: black;
   --input-background: #fff;
+  --menu-background: #ebebeb;
 }
 
 * {
@@ -332,3 +333,35 @@ span.clear-input {
   outline: none;
   min-width: 0;
 }
+
+/* context menu */
+
+.context-menu {
+  padding: 4px;
+  width: 150px;
+  margin: 0;
+  position: absolute;
+  box-shadow: 0 0 14px 0 #aaa;
+  background-color: var(--menu-background);
+  border-radius: var(--border-radius_1);
+}
+
+.context-button {
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 6px 10px;
+  margin-bottom: 4px;
+  text-align: left;
+  border-radius: var(--border-radius_2);
+}
+
+.context-button:last-child {
+  margin-bottom: 0;
+}
+
+.context-button:hover {
+  background-color: var(--button-background);
+}
+
+
