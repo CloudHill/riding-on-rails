@@ -403,7 +403,7 @@ span.clear-input {
   border-radius: var(--border-radius_2);
 }
 
-.context-items button:hover {
+.context-items button:not([disabled]):hover {
   background-color: var(--button-background);
 }
 
@@ -425,7 +425,7 @@ span.clear-input {
 
 .taglist-header {
   display: flex;
-  margin-bottom: 4px;
+  margin: 2px 2px 4px;
 }
 
 .tag-search {

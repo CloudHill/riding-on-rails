@@ -4,7 +4,8 @@ interface ContextMenuProps {
   anchor: {x: number, y: number};
   menuItems?: {
     title: string;
-    action: () => void
+    action: () => void;
+    disabled?: boolean;
   }[];
   content?: JSX.Element;
   hide?: () => void;
@@ -13,13 +14,14 @@ interface ContextMenuProps {
 class ContextMenu extends React.Component<ContextMenuProps> {
   render() {
     const { menuItems, anchor, content } = this.props;
-    const items = menuItems?.map(({action, title}, i) => (
+    const items = menuItems?.map(({title, action, disabled}, i) => (
       <li key={i}>
         <button 
           onClick={() => {
             action();
             this.props.hide();
           }}
+          disabled={disabled}
         >
           {title}
         </button>

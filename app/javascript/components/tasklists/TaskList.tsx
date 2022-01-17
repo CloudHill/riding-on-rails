@@ -33,7 +33,7 @@ class TaskList extends React.Component<Props, State> {
 
   onContextMenu(e:MouseEvent<HTMLDivElement>) {
     const { taskList } = this.props;    
-    if (taskList.id === 0) return;
+    const disabled = taskList.id === 0;
 
     e.preventDefault();
 
@@ -45,11 +45,13 @@ class TaskList extends React.Component<Props, State> {
       menuItems: [
         { 
           title: "Delete", 
-          action: () => this.props.crud.delete(taskList)
+          action: () => this.props.crud.delete(taskList),
+          disabled
         },
         { 
           title: "Rename", 
-          action: () => this.setState({ editing: true })
+          action: () => this.setState({ editing: true }),
+          disabled
         },
       ]
     });
