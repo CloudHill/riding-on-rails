@@ -7,6 +7,7 @@ interface ContextMenuProps {
     action: () => void
   }[];
   content?: JSX.Element;
+  hide?: () => void;
 }
 
 class ContextMenu extends React.Component<ContextMenuProps> {
@@ -14,7 +15,12 @@ class ContextMenu extends React.Component<ContextMenuProps> {
     const { menuItems, anchor, content } = this.props;
     const items = menuItems?.map(({action, title}, i) => (
       <li key={i}>
-        <button onClick={() => action()}>
+        <button 
+          onClick={() => {
+            action();
+            this.props.hide();
+          }}
+        >
           {title}
         </button>
       </li>

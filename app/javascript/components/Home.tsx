@@ -31,7 +31,7 @@ class Home extends React.Component<{}, State> {
   }
 
   componentDidMount() {    
-    document.addEventListener("click", () => this.onDocumentClick());
+    document.addEventListener("click", e => this.onDocumentClick(e));
   }
 
   showContextMenu(options: ContextMenuProps) {
@@ -45,8 +45,9 @@ class Home extends React.Component<{}, State> {
     this.setState({ activeListId: id });
   }
 
-  onDocumentClick() {
-    if (this.state.showContextMenu)
+  onDocumentClick(e:MouseEvent) {
+    const el = e.target as HTMLElement;
+    if (this.state.showContextMenu && !el.closest('.context-menu'))
       this.setState(hiddenContextMenu);
   }
 
@@ -62,10 +63,15 @@ class Home extends React.Component<{}, State> {
     return (
       <>
         <Nav activeList={activeList} showContextMenu={this.showContextMenu}/>
-        <Tasks activeList={activeListId}/>
+        <Tasks activeList={activeListId} showContextMenu={this.showContextMenu}/>
         { 
           showContextMenu
-            ? <ContextMenu anchor={anchor} menuItems={menuItems} content={content} />
+            ? <ContextMenu
+                anchor={anchor} 
+                menuItems={menuItems}
+                content={content}
+                hide={() => this.setState(hiddenContextMenu)}
+              />
             : null
         }
       </>
