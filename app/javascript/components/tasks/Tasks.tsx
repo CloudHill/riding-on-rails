@@ -64,6 +64,9 @@ class Tasks extends React.Component<Props, State> {
   addTask(task: TaskInterface) {
     const url = "/api/v1/tasks";
     const token = getCsrfToken();
+
+    // add task to active list
+    task.task_list_id = this.props.activeList;    
     
     // create task
     fetch(url, {
