@@ -1,5 +1,5 @@
 import React from 'react';
-import SearchTag from './SearchTag';
+import TagInput from './TagInput';
 import TagList from './TagList';
 import TagInterface from './TagInterface';
 import { getCsrfToken } from '../../helpers';
@@ -60,7 +60,7 @@ class TagMenu extends React.Component<Props, { tags: TagInterface[] }> {
     return (
       <div className="taglist-container">
         <div className="taglist-header">
-          <SearchTag createTag={this.createTag}/>
+          <TagInput createTag={this.createTag}/>
         </div>
         <TagList 
           tags={this.state.tags} 

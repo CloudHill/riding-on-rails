@@ -5,7 +5,7 @@ interface Props {
   createTag: (TagInterface) => void
 }
 
-class SearchTag extends React.Component<Props, { name: string }> {
+class TagInput extends React.Component<Props, { name: string }> {
   constructor(props) {
     super(props)
     this.state = { name: "" }
@@ -26,10 +26,10 @@ class SearchTag extends React.Component<Props, { name: string }> {
 
     return (
       <>
-        <div className="tag-search">
+        <div className="tag-input">
           <input 
             value={name}
-            placeholder='Search tag'
+            placeholder='Tag name'
             onChange={e => this.onChange(e)}
             autoFocus
           />
@@ -45,4 +45,4 @@ class SearchTag extends React.Component<Props, { name: string }> {
   }
 }
 
-export default SearchTag;
+export default TagInput;
