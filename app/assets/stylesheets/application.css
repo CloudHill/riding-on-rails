@@ -287,12 +287,32 @@ span.clear-input {
   height: 100vh;
   width: 260px;
   padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* search */
+
+.searchbar {
+  padding: 4px;
+  background: var(--input-background);
+  border-radius: var(--border-radius_2);
+  margin-bottom: 14px;
+}
+
+.searchbar input {
+  width: 100%;
+  padding: 8px;
+  min-width: 0;
+  background: transparent;
+  outline: none;
+  border: none;
 }
 
 /* task list */
 
 .tasklists-container {
-  height: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
 }
@@ -427,7 +447,7 @@ span.clear-input {
   display: flex;
 }
 
-.tag-search {
+.tag-input {
   font-size: 14px;
   width: 120px;
   margin-right: 6px;
@@ -436,7 +456,7 @@ span.clear-input {
   border-radius: var(--border-radius_2);
 }
 
-.tag-search input {
+.tag-input input {
   width: 100%;
   min-width: 0;
   background: transparent;

@@ -2,11 +2,20 @@ import React from 'react';
 import Tasks from './tasks/Tasks';
 import Nav from './Nav';
 import ContextMenu, { ContextMenuProps } from './ContextMenu';
+import TagInterface from './tags/TagInterface';
+import TaskListInterface from './tasklists/TaskListInterface';
 
 interface State {
-  activeListId: number;
+  activeList: {
+    id: number;
+    name: string;
+  };
   showContextMenu: boolean;
   contextMenuOptions: ContextMenuProps;
+  search: {
+    title: string;
+    tags: TagInterface[];
+  };
 }
 
 const hiddenContextMenu = {
@@ -18,16 +27,28 @@ const hiddenContextMenu = {
   }
 }
 
+const emptySearch = {
+  search: {
+    title: "",
+    tags: [],
+  }
+}
+
 class Home extends React.Component<{}, State> {
   constructor(props) {
     super(props);
-    this.state = { 
-      activeListId: 0,
-      ...hiddenContextMenu
+    this.state = {
+      activeList: {
+        id: 0,
+        name: "Tasks"
+      },
+      ...hiddenContextMenu,
+      ...emptySearch
     };
 
     this.setActiveList = this.setActiveList.bind(this);
     this.showContextMenu = this.showContextMenu.bind(this);
+    this.searchTasks = this.searchTasks.bind(this);
   }
 
   componentDidMount() {    
@@ -41,8 +62,8 @@ class Home extends React.Component<{}, State> {
     });
   }
 
-  setActiveList(id: number) {
-    this.setState({ activeListId: id });
+  setActiveList(taskList: TaskListInterface) {
+    this.setState({ activeList: taskList });
   }
 
   onDocumentClick(e:MouseEvent) {
@@ -51,19 +72,31 @@ class Home extends React.Component<{}, State> {
       this.setState(hiddenContextMenu);
   }
 
+  searchTasks(search: { title: string, tags: TagInterface[] }) {
+    this.setState({ search });
+  }
+
   render() {
-    const { activeListId, showContextMenu, contextMenuOptions } = this.state;
+    const { activeList, showContextMenu, contextMenuOptions, search } = this.state;
     const { anchor, menuItems, content } = contextMenuOptions;
     
-    const activeList = {
-      activeListId, 
+    const activeListProp = {
+      ...activeList, 
       setActiveList: this.setActiveList
     }
 
     return (
       <>
-        <Nav activeList={activeList} showContextMenu={this.showContextMenu}/>
-        <Tasks activeList={activeListId} showContextMenu={this.showContextMenu}/>
+        <Nav
+          activeList={activeListProp}
+          showContextMenu={this.showContextMenu}
+          searchTasks={this.searchTasks}
+        />
+        <Tasks
+          activeList={activeListProp}
+          showContextMenu={this.showContextMenu}
+          search={search}  
+        />
         { 
           showContextMenu
             ? <ContextMenu

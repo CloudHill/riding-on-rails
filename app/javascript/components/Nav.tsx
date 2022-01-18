@@ -1,13 +1,18 @@
 import React from 'react';
 import { ContextMenuProps } from './ContextMenu';
+import SearchBar from './SearchBar';
+import TagInterface from './tags/TagInterface';
+import TaskListInterface from './tasklists/TaskListInterface';
 import TaskLists from './tasklists/TaskLists';
 
 interface Props { 
   activeList: {
-    activeListId: number;
-    setActiveList: (id: number) => void;
-  }
+    id: number;
+    name: string;
+    setActiveList: (taskList: TaskListInterface) => void;
+  };
   showContextMenu: (options: ContextMenuProps) => void;
+  searchTasks: (search: { title: string, tags: TagInterface[] }) => void;
 }
 
 class Nav extends React.Component<Props> {
@@ -15,6 +20,7 @@ class Nav extends React.Component<Props> {
     const { activeList, showContextMenu } = this.props;
     return (
       <div className="navbar">
+        <SearchBar searchTasks={this.props.searchTasks}/>
         <TaskLists activeList={activeList} showContextMenu={showContextMenu}/>
       </div>
     )

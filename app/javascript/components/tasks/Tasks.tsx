@@ -5,14 +5,25 @@ import TaskInterface from "./TaskInterface";
 import { getCsrfToken } from "../../helpers";
 import TaskListInterface from "../tasklists/TaskListInterface";
 import { ContextMenuProps } from "../ContextMenu";
+import TagInterface from "../tags/TagInterface";
 
 interface Props { 
-  activeList: number;
+  activeList: {
+    id: number;
+    name: string;
+    setActiveList: (taskList: TaskListInterface) => void;
+  };
   showContextMenu: (options: ContextMenuProps) => void;
+  search: {
+    title: string;
+    tags: TagInterface[];
+  };
 }
 
 interface State {
+  tasks: TaskInterface[];
   taskList: TaskListInterface;
+  filter: (task: TaskInterface) => boolean;
   editing: number;
 }
 
@@ -29,7 +40,9 @@ class Tasks extends React.Component<Props, State> {
     }
 
     this.state = {
-      taskList, 
+      tasks: [],
+      taskList,
+      filter: null,
       editing: null
     }
 
@@ -41,33 +54,32 @@ class Tasks extends React.Component<Props, State> {
     this.editTask = this.editTask.bind(this);
   }
 
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.activeList !== this.props.activeList)
-      this.getTaskList();
-  }
-
   componentDidMount() {
-    this.getTaskList();
+    this.getAllTasks();
+    // show tasks in current active list
+    this.setState({
+      filter: task => task.task_list_id === this.props.activeList.id
+    });
   }
 
-  getTaskList() {
-    const url = "/api/v1/task_lists/" + this.props.activeList;    
+  getAllTasks() {
+    const url = "/api/v1/tasks";
 
     fetch(url)
       .then(response => {
         if (response.ok) return response.json();
         throw new Error("Network response was not ok.");
       })
-      .then(response => this.setState({ taskList: response }))
+      .then(response => this.setState({ tasks: response }))
       .catch(() => this.context.history.push("/"));
   }
-
+  
   addTask(task: TaskInterface) {
     const url = "/api/v1/tasks";
     const token = getCsrfToken();
 
     // add task to active list
-    task.task_list_id = this.props.activeList;
+    task.task_list_id = this.props.activeList.id;
 
     // create task
     fetch(url, {
@@ -152,8 +164,7 @@ class Tasks extends React.Component<Props, State> {
   }
 
   render() {
-    const { taskList } = this.state;
-    const { tasks } = taskList;
+    const { tasks, taskList, filter } = this.state;
     
     const crudTasks = { 
       add: this.addTask,
@@ -161,13 +172,16 @@ class Tasks extends React.Component<Props, State> {
       delete: this.deleteTask
     }
 
+    const filteredTasks = !filter ? tasks : tasks.filter(filter);
+
     // sort tasks by created_at (desc)
-    const sortedTasks = tasks.sort((a, b) => 
+    const sortedTasks = filteredTasks.sort((a, b) => 
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
 
     const allTasks = sortedTasks.map(task => (
-      <Task key={task.id} 
+      <Task 
+        key={task.id} 
         task={task} 
         crud={crudTasks}
         editing={this.state.editing === task.id}
@@ -179,7 +193,7 @@ class Tasks extends React.Component<Props, State> {
     return (
       <div className="tasks-container">
         <h1>
-          {taskList.name}
+          {this.props.activeList.name}
         </h1>
         <div ref={this.tasksRef} className="tasks">
           {allTasks}

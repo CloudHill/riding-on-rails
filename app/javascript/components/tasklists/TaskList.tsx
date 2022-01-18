@@ -5,8 +5,9 @@ import TaskListInterface from './TaskListInterface';
 interface Props { 
   taskList: TaskListInterface;
   activeList: {
-    activeListId: number;
-    setActiveList: (id: number) => void;
+    id: number;
+    name: string;
+    setActiveList: (taskList: TaskListInterface) => void;
   };
   showContextMenu: (options: ContextMenuProps) => void;
   crud: { rename, delete };
@@ -27,8 +28,8 @@ class TaskList extends React.Component<Props, State> {
   }
   
   onClick() {
-    const { taskList: { id }, activeList: { setActiveList } } = this.props;
-    setActiveList(id);    
+    const { taskList, activeList: { setActiveList } } = this.props;
+    setActiveList(taskList);    
   }
 
   onContextMenu(e:MouseEvent<HTMLDivElement>) {
@@ -77,8 +78,8 @@ class TaskList extends React.Component<Props, State> {
 
 
   render() {
-    const { taskList: { id, name }, activeList: { activeListId } } = this.props;
-    const active = id === activeListId;
+    const { taskList: { id, name }, activeList: { id: activeId } } = this.props;
+    const active = id === activeId;
 
     return (
       <div

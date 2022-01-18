@@ -1,7 +1,7 @@
 class Api::V1::TasksController < ApplicationController
   def index
     tasks = Task.all.order(created_at: :desc)
-    render json: tasks
+    render json: tasks, include: :tags
   end
 
   def show

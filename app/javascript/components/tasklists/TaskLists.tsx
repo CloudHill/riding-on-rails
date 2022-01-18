@@ -7,8 +7,9 @@ import { ContextMenuProps } from '../ContextMenu';
 
 interface Props {
   activeList: {
-    activeListId: number;
-    setActiveList: (id: number) => void;
+    id: number;
+    name: string;
+    setActiveList: (taskList: TaskListInterface) => void;
   };
   showContextMenu: (options: ContextMenuProps) => void;
 }
@@ -66,7 +67,7 @@ class TaskLists extends React.Component<Props, State> {
       .catch(error => console.log(error.message));
   }
 
-  renameTaskList(taskList: TaskListInterface, newName: string) {
+  renameTaskList(taskList: TaskListInterface, name: string) {
     const id = taskList.id;
     const url = `/api/v1/task_lists/${id}`;   
     const token = getCsrfToken();
@@ -77,19 +78,25 @@ class TaskLists extends React.Component<Props, State> {
         "X-CSRF-Token": token,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ name: newName })
+      body: JSON.stringify({ name })
     })
       .then(response => {
         if (response.ok) return response.json();
         throw new Error("Network response was not ok.");
       })
       .then(response => {
+        const updatedList = response as TaskListInterface;
         const { taskLists } = this.state;
+        const { activeList: { id: activeId, setActiveList } } = this.props;
+
         // update list state
         const lists = taskLists.map(
-          list => list.id === taskList.id ? response : list
+          list => list.id === taskList.id ? updatedList : list
         );
         this.setState({ taskLists: lists});
+
+        // update if list is active
+        if (activeId === id) setActiveList(updatedList);
       })
       .catch(error => console.log(error.message));
   }
@@ -111,7 +118,7 @@ class TaskLists extends React.Component<Props, State> {
       })
       .then(response => {
         const { taskLists } = this.state;
-        const { activeList: { activeListId, setActiveList } } = this.props;
+        const { activeList: { id: activeId, setActiveList } } = this.props;
 
         // remove list from state
         const lists = taskLists.filter(
@@ -120,7 +127,7 @@ class TaskLists extends React.Component<Props, State> {
         this.setState({ taskLists: lists});
 
         // change to default list if the deleted list is active
-        if (activeListId === id) setActiveList(0);
+        if (activeId === id) setActiveList({id: 0, name:"Tasks"});
       })
       .catch(error => console.log(error.message));
   }
