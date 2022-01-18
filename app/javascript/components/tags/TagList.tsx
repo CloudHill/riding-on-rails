@@ -5,6 +5,7 @@ import TagInterface from './TagInterface';
 interface Props {
   tags: TagInterface[];
   onClick?: (tag: TagInterface) => void;
+  remove?: (tag: TagInterface) => void;
 }
 
 class TagMenu extends React.Component<Props> {
@@ -19,6 +20,7 @@ class TagMenu extends React.Component<Props> {
         key={tag.id} 
         tag={tag}
         onClick={onClick}
+        remove={this.props.remove}
       />
     ));
       

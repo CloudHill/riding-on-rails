@@ -205,7 +205,7 @@ span.clear-input {
   justify-content: center;
   padding: 2px;
   margin: 0;
-  background: #ffaeae;
+  background: #fff8;
   border-radius: 2px;
   cursor: pointer;
 }
@@ -451,4 +451,14 @@ span.clear-input {
 
 .context-menu .taglist {
   max-width: 280px;
+}
+
+/* clear */
+
+.tag-rm {
+  padding-right: 4px;
+}
+
+.tag-rm span.clear-input {
+  margin-left: 6px;
 }

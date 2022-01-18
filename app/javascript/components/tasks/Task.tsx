@@ -21,6 +21,7 @@ class Task extends React.Component<Props> {
     this.onFocus = this.onFocus.bind(this);
     this.closeEdit = this.closeEdit.bind(this);
     this.addTag = this.addTag.bind(this);
+    this.removeTag = this.removeTag.bind(this);
   }
 
   completeTask() {
@@ -39,11 +40,19 @@ class Task extends React.Component<Props> {
     const {editing, task} = this.props;
     if (editing) return;
     this.props.editTask(task.id);
+    // hide context menu
+    (e.target as HTMLDivElement).click();
   }
 
   addTag(tag: TaskInterface) {
     const task = this.props.task;
-    const props = {tag: tag.id}
+    const props = {add_tag: tag.id}
+    this.props.crud.update(task, props);
+  }
+
+  removeTag(tag: TaskInterface) {
+    const task = this.props.task;
+    const props = {remove_tag: tag.id}
     this.props.crud.update(task, props);
   }
 
@@ -74,7 +83,7 @@ class Task extends React.Component<Props> {
             ? <TaskDisplay task={task}/>
             : <TaskEdit
                 task={task}
-                crud={{ ...this.props.crud, addTag: this.addTag }}
+                crud={{ ...this.props.crud, addTag: this.addTag, removeTag: this.removeTag }}
                 closeEdit={this.closeEdit}
                 showContextMenu={this.props.showContextMenu}
               />

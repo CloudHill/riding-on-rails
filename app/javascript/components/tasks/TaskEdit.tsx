@@ -7,10 +7,11 @@ import { formatDate } from '../../helpers';
 import { ContextMenuProps } from '../ContextMenu';
 import TagMenu from '../tags/TagMenu';
 import TagList from '../tags/TagList';
+import TagInterface from '../tags/TagInterface';
 
 interface Props {
   task: TaskInterface;
-  crud: { delete, update, addTag };
+  crud: { delete, update, addTag, removeTag };
   closeEdit: () => void;
   showContextMenu: (options: ContextMenuProps) => void;
 }
@@ -20,6 +21,7 @@ interface State {
   note: string;
   important: boolean;
   due_at:  null | Date;
+  tags: TagInterface[];
   showNote: boolean;
   editorState: typeof EditorState;
 }
@@ -28,17 +30,20 @@ class TaskEdit extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
-    const {title, note, important, due_at} = props.task;
+    const {title, note, important, due_at, tags} = props.task;
 
     // draft-js
     const editorContent = ContentState.createFromText(note);
     const editorState = EditorState.createWithContent(editorContent);
 
     this.state = {
-      title, note, important, due_at,
+      title, note, important, due_at, tags,
       showNote: !!note,
       editorState
     };
+
+    this.addTag = this.addTag.bind(this);
+    this.removeTag = this.removeTag.bind(this);
   }
 
   updateTask(props) {
@@ -87,13 +92,28 @@ class TaskEdit extends React.Component<Props, State> {
         x: rect.x + (rect.width / 2),
         y: rect.y + (rect.height / 2),
       },
-      content: <TagMenu onClick={this.props.crud.addTag}/>
+      content: <TagMenu onClick={this.addTag}/>
     });
   }
 
+  addTag(tag: TagInterface) {
+    const { tags } = this.state;
+    const newTags = tags.concat(tag);
+
+    this.props.crud.addTag(tag);
+    this.setState({ tags: newTags })
+  }
+
+  removeTag(tag: TagInterface) {
+    const { tags } = this.state;
+    const newTags = tags.filter(t => t.id !== tag.id)
+
+    this.props.crud.removeTag(tag);
+    this.setState({ tags: newTags })
+  }
+
   render() {
-    const { title, note, important, due_at:dueAt } = this.state;
-    const { tags } = this.props.task;
+    const { title, note, important, due_at:dueAt, tags } = this.state;
     const dueDate = dueAt ? new Date(dueAt) : null;
 
     //@ts-ignore
@@ -187,7 +207,7 @@ class TaskEdit extends React.Component<Props, State> {
                 </button>
               </div>
               
-              <TagList tags={tags}/>
+              <TagList tags={tags} remove={this.removeTag}/>
 
             </div>
             <div className="task-actions">

@@ -24,10 +24,17 @@ class Api::V1::TasksController < ApplicationController
   def update
     if (task)
       task&.update(task_params)
-      if (params.has_key?(:tag))
-        @tag = Tag.find(params[:tag])
+
+      if (params.has_key?(:add_tag))
+        @tag = Tag.find(params[:add_tag])
         task.tags << @tag unless task.tags.exists?(@tag.id)
       end
+
+      if (params.has_key?(:remove_tag))
+        @tag = Tag.find(params[:remove_tag])
+        task.tags.delete(@tag)
+      end
+
       render json: task, include: :tags
     else
       render json: task.errors
