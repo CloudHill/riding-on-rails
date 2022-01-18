@@ -1,3 +1,5 @@
+import TagInterface from "../tags/TagInterface";
+
 export default
 interface TaskInterface {
   id?: number;
@@ -10,4 +12,5 @@ interface TaskInterface {
   due_at?: null | Date;
   created_at?: Date;
   updated_at?: Date;
+  tags?: TagInterface[];
 }

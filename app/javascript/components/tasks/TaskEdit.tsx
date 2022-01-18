@@ -5,6 +5,7 @@ import { Check, Star, Calendar, AlignJustify, X, Tag } from 'react-feather';
 import { Editor, EditorState, ContentState } from 'draft-js';
 import { formatDate } from '../../helpers';
 import { ContextMenuProps } from '../ContextMenu';
+import TagMenu from '../tags/TagMenu';
 import TagList from '../tags/TagList';
 
 interface Props {
@@ -86,12 +87,13 @@ class TaskEdit extends React.Component<Props, State> {
         x: rect.x + (rect.width / 2),
         y: rect.y + (rect.height / 2),
       },
-      content: <TagList onClick={this.props.crud.addTag}/>
+      content: <TagMenu onClick={this.props.crud.addTag}/>
     });
   }
 
   render() {
-    const {title, note, important, due_at:dueAt} = this.state;
+    const { title, note, important, due_at:dueAt } = this.state;
+    const { tags } = this.props.task;
     const dueDate = dueAt ? new Date(dueAt) : null;
 
     //@ts-ignore
@@ -148,41 +150,44 @@ class TaskEdit extends React.Component<Props, State> {
               ) : null
           }
           <div className="task-bar">
-            <div className="task-options">
+            <div>
+              <div className="task-options">
+                <button
+                  title="Add Note"
+                  className="task-option"
+                  //@ts-ignore
+                  active={note ? "" : undefined}
+                  onClick={() => this.toggleNoteInput()}
+                >
+                  <AlignJustify size="100%" fill=""/>
+                </button>
 
-              <button
-                title="Add Note"
-                className="task-option"
-                //@ts-ignore
-                active={note ? "" : undefined}
-                onClick={() => this.toggleNoteInput()}
-              >
-                <AlignJustify size="100%" fill=""/>
-              </button>
+                <button
+                  title="Set Importance"
+                  className="task-option"
+                  //@ts-ignore
+                  active={important ? "" : undefined}
+                  onClick={() => this.toggleImportance()}
+                >
+                  <Star size="100%" fill=""/>
+                </button>
 
-              <button
-                title="Set Importance"
-                className="task-option"
-                //@ts-ignore
-                active={important ? "" : undefined}
-                onClick={() => this.toggleImportance()}
-              >
-                <Star size="100%" fill=""/>
-              </button>
+                <DatePicker
+                  selected={dueDate || new Date()}
+                  onChange={e => this.setDueDate(e)}
+                  customInput={<CalendarButton/>}
+                />
 
-              <DatePicker
-                selected={dueDate || new Date()}
-                onChange={e => this.setDueDate(e)}
-                customInput={<CalendarButton/>}
-              />
-
-              <button
-                title="Tag"
-                className="task-option"
-                onClick={e => this.showTagList(e)}
-              >
-                <Tag size="100%" fill=""/>
-              </button>
+                <button
+                  title="Tag"
+                  className="task-option"
+                  onClick={e => this.showTagList(e)}
+                >
+                  <Tag size="100%" fill=""/>
+                </button>
+              </div>
+              
+              <TagList tags={tags}/>
 
             </div>
             <div className="task-actions">

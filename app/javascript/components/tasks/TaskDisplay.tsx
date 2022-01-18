@@ -1,13 +1,14 @@
 import React from 'react';
 import TaskInterface from './TaskInterface';
+import TagList from '../tags/TagList';
 import { formatDate } from '../../helpers';
 import { Star, Calendar } from 'react-feather';
 
 class TaskDisplay extends React.Component<{task: TaskInterface}> {
   render() {
-    const { title, note, important, completed, due_at:dueAt } = this.props.task;
+    const { title, note, important, completed, due_at:dueAt, tags } = this.props.task;
     const dueDate = dueAt ? new Date(dueAt) : null;
-
+    
     return (
       (
         <div className="task-info">
@@ -50,6 +51,7 @@ class TaskDisplay extends React.Component<{task: TaskInterface}> {
                 </div>
               ) : null
           }
+          <TagList tags={tags}/>
         </div>
       )
     )

@@ -67,8 +67,8 @@ class Tasks extends React.Component<Props, State> {
     const token = getCsrfToken();
 
     // add task to active list
-    task.task_list_id = this.props.activeList;    
-    
+    task.task_list_id = this.props.activeList;
+
     // create task
     fetch(url, {
       method: "POST",

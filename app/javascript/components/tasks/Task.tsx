@@ -42,7 +42,9 @@ class Task extends React.Component<Props> {
   }
 
   addTag(tag: TaskInterface) {
-    
+    const task = this.props.task;
+    const props = {tag: tag.id}
+    this.props.crud.update(task, props);
   }
 
   render() {

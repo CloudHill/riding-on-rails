@@ -6,7 +6,7 @@ class Api::V1::TasksController < ApplicationController
 
   def show
     if (task)
-      render json: task
+      render json: task, include: :tags
     else
       render json: task.errors
     end
@@ -24,7 +24,11 @@ class Api::V1::TasksController < ApplicationController
   def update
     if (task)
       task&.update(task_params)
-      render json: task
+      if (params.has_key?(:tag))
+        @tag = Tag.find(params[:tag])
+        task.tags << @tag unless task.tags.exists?(@tag.id)
+      end
+      render json: task, include: :tags
     else
       render json: task.errors
     end

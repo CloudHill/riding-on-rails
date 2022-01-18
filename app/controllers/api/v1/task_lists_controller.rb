@@ -6,7 +6,7 @@ class Api::V1::TaskListsController < ApplicationController
 
   def show
     if (task_list)
-      render json: task_list, include: :tasks
+      render json: task_list, include: [:tasks => {include: :tags}]
     else
       render json: task_list.errors
     end

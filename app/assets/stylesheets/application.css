@@ -420,12 +420,11 @@ span.clear-input {
   font-size: 14px;
   padding: 0 8px;
   border-radius: var(--border-radius_2);
-  margin: 2px;
+  margin: 4px 4px 0 0;
 }
 
 .taglist-header {
   display: flex;
-  margin: 2px 2px 4px;
 }
 
 .tag-search {
@@ -448,5 +447,8 @@ span.clear-input {
 .taglist {
   display: flex;
   flex-wrap: wrap;
+}
+
+.context-menu .taglist {
   max-width: 280px;
 }
