@@ -8,6 +8,10 @@ import { ContextMenuProps } from "../ContextMenu";
 import TagInterface from "../tags/TagInterface";
 
 interface Props {
+  edit: {
+    id: number;
+    editTask: (id:number) => void;
+  };
   activeList: {
     id: number;
     name: string;
@@ -23,7 +27,6 @@ interface Props {
 interface State {
   tasks: TaskInterface[];
   search: boolean;
-  editing: number;
 }
 
 class Tasks extends React.Component<Props, State> {
@@ -34,8 +37,7 @@ class Tasks extends React.Component<Props, State> {
 
     this.state = {
       tasks: [],
-      search: false,
-      editing: null
+      search: false
     }
 
     this.tasksRef = React.createRef();
@@ -43,7 +45,6 @@ class Tasks extends React.Component<Props, State> {
     this.addTask = this.addTask.bind(this);
     this.updateTask = this.updateTask.bind(this);
     this.deleteTask = this.deleteTask.bind(this);
-    this.editTask = this.editTask.bind(this);
   }
 
   componentDidMount() {
@@ -143,10 +144,6 @@ class Tasks extends React.Component<Props, State> {
       .catch(error => console.log(error.message));
   }
 
-  editTask(id:number) {
-    this.setState({editing: id});
-  }
-
   activeListFilter(task: TaskInterface) {
     return task.task_list_id === this.props.activeList.id   
   }
@@ -188,8 +185,7 @@ class Tasks extends React.Component<Props, State> {
         key={task.id}
         task={task}
         crud={crudTasks}
-        editing={this.state.editing === task.id}
-        editTask={this.editTask}
+        edit={this.props.edit}
         showContextMenu={this.props.showContextMenu}
       />
     ));

@@ -6,6 +6,7 @@ import TagInterface from './tags/TagInterface';
 import TaskListInterface from './tasklists/TaskListInterface';
 
 interface State {
+  editing: number;
   activeList: {
     id: number;
     name: string;
@@ -38,6 +39,7 @@ class Home extends React.Component<{}, State> {
   constructor(props) {
     super(props);
     this.state = {
+      editing: null,
       activeList: {
         id: 0,
         name: "Tasks"
@@ -46,6 +48,7 @@ class Home extends React.Component<{}, State> {
       ...emptySearch
     };
 
+    this.editTask = this.editTask.bind(this);
     this.setActiveList = this.setActiveList.bind(this);
     this.showContextMenu = this.showContextMenu.bind(this);
     this.searchTasks = this.searchTasks.bind(this);
@@ -62,7 +65,12 @@ class Home extends React.Component<{}, State> {
     });
   }
 
+  editTask(id:number) {
+    this.setState({ editing: id });
+  }
+
   setActiveList(taskList: TaskListInterface) {
+    this.editTask(null);
     this.setState({ activeList: taskList });
   }
 
@@ -73,13 +81,19 @@ class Home extends React.Component<{}, State> {
   }
 
   searchTasks(search: { title: string, tags: TagInterface[] }) {
+    this.editTask(null);
     this.setState({ search });
   }
 
   render() {
-    const { activeList, showContextMenu, contextMenuOptions, search } = this.state;
+    const { editing, activeList, showContextMenu, contextMenuOptions, search } = this.state;
     const { anchor, menuItems, content } = contextMenuOptions;
     
+    const editProp = {
+      id: editing,
+      editTask: this.editTask
+    }
+
     const activeListProp = {
       ...activeList, 
       setActiveList: this.setActiveList
@@ -93,6 +107,7 @@ class Home extends React.Component<{}, State> {
           searchTasks={this.searchTasks}
         />
         <Tasks
+          edit={editProp}
           activeList={activeListProp}
           showContextMenu={this.showContextMenu}
           search={search}  

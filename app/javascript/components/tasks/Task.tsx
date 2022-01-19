@@ -8,8 +8,10 @@ import { ContextMenuProps } from '../ContextMenu';
 interface Props {
   task: TaskInterface;
   crud: { delete, update };
-  editing: boolean;
-  editTask: (id: number) => void;
+  edit: {
+    id: number;
+    editTask: (id:number) => void;
+  };
   showContextMenu: (options: ContextMenuProps) => void;
 };
 
@@ -33,15 +35,16 @@ class Task extends React.Component<Props> {
   }
 
   closeEdit() {
-    this.props.editTask(null);
+    this.props.edit.editTask(null);
   }
 
   onFocus(e: FocusEvent<HTMLDivElement, Element>) {
-    const {editing, task} = this.props;
-    if (editing) return;
-    this.props.editTask(task.id);
-    // hide context menu
-    (e.target as HTMLDivElement).click();
+    const {edit, task} = this.props;
+    // return if already editing
+    if (edit.id === task.id) return;
+    // otherwise, edit this task
+    edit.editTask(task.id);
+    (e.target as HTMLDivElement).click(); // hide context menu
   }
 
   addTag(tag: TaskInterface) {
@@ -57,8 +60,9 @@ class Task extends React.Component<Props> {
   }
 
   render() {
-    const { task, editing } = this.props;
-    const { completed } = task;
+    const { task, edit } = this.props;
+    const { id, completed } = task;
+    const editing = edit.id === id;
 
     return (
       <div
