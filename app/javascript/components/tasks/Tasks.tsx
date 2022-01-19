@@ -168,8 +168,11 @@ class Tasks extends React.Component<Props, State> {
       delete: this.deleteTask
     }
 
+    const { title, tags} = this.props.search;
+    const search = title || tags.length > 0;
+
     const filterFunc = (
-      this.state.search 
+      search 
         ? this.searchFilter 
         : this.activeListFilter
     ).bind(this);
@@ -194,7 +197,7 @@ class Tasks extends React.Component<Props, State> {
     return (
       <div className="tasks-container">
         <h1>
-          {this.props.activeList.name}
+          {search ? "Search" : this.props.activeList.name}
         </h1>
         <div ref={this.tasksRef} className="tasks">
           {allTasks}
