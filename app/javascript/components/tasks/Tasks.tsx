@@ -7,7 +7,7 @@ import TaskListInterface from "../tasklists/TaskListInterface";
 import { ContextMenuProps } from "../ContextMenu";
 import TagInterface from "../tags/TagInterface";
 
-interface Props { 
+interface Props {
   activeList: {
     id: number;
     name: string;
@@ -22,8 +22,7 @@ interface Props {
 
 interface State {
   tasks: TaskInterface[];
-  taskList: TaskListInterface;
-  filter: (task: TaskInterface) => boolean;
+  search: boolean;
   editing: number;
 }
 
@@ -33,16 +32,9 @@ class Tasks extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
-    const taskList = {
-      id: 0,
-      name: "Tasks",
-      tasks: []
-    }
-
     this.state = {
       tasks: [],
-      taskList,
-      filter: null,
+      search: false,
       editing: null
     }
 
@@ -55,14 +47,6 @@ class Tasks extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.getAllTasks();
-    // show tasks in current active list
-    this.setState({
-      filter: task => task.task_list_id === this.props.activeList.id
-    });
-  }
-
-  getAllTasks() {
     const url = "/api/v1/tasks";
 
     fetch(url)
@@ -73,7 +57,7 @@ class Tasks extends React.Component<Props, State> {
       .then(response => this.setState({ tasks: response }))
       .catch(() => this.context.history.push("/"));
   }
-  
+
   addTask(task: TaskInterface) {
     const url = "/api/v1/tasks";
     const token = getCsrfToken();
@@ -95,11 +79,11 @@ class Tasks extends React.Component<Props, State> {
         throw new Error("Network response was not ok.");
       })
       .then(response => {
-        const { taskList } = this.state;
+        const { tasks } = this.state;
         const newTask = response as TaskInterface;
-        const tasks = [newTask].concat(taskList.tasks);
+        const newTasks = [newTask].concat(tasks);
 
-        this.setState({ taskList : {...taskList, tasks }});
+        this.setState({ tasks: newTasks});
         this.tasksRef.current.scrollTo(0, 0); // scroll to top
       })
       .catch(error => console.log(error.message));
@@ -107,7 +91,7 @@ class Tasks extends React.Component<Props, State> {
 
   updateTask(task: TaskInterface, newProps: object) {
     const id = task.id;
-    const url = `/api/v1/tasks/${id}`;   
+    const url = `/api/v1/tasks/${id}`;
     const token = getCsrfToken();
 
     fetch(url, {
@@ -123,12 +107,12 @@ class Tasks extends React.Component<Props, State> {
         throw new Error("Network response was not ok.");
       })
       .then(response => {
-        const { taskList } = this.state;
-        const tasks = taskList.tasks.map(
+        const { tasks } = this.state;
+        const newTasks = tasks.map(
           t => t.id === task.id ? response : t
         );
 
-        this.setState({ taskList : {...taskList, tasks }});
+        this.setState({ tasks : newTasks });
       })
       .catch(error => console.log(error.message));
   }
@@ -149,12 +133,12 @@ class Tasks extends React.Component<Props, State> {
         throw new Error("Network response was not ok.");
       })
       .then(response => {
-        const { taskList } = this.state;
-        const tasks = taskList.tasks.filter(
+        const { tasks } = this.state;
+        const newTasks = tasks.filter(
           ({id}) => id !== task.id
         );
 
-        this.setState({ taskList : {...taskList, tasks }});
+        this.setState({ tasks: newTasks });
       })
       .catch(error => console.log(error.message));
   }
@@ -163,33 +147,50 @@ class Tasks extends React.Component<Props, State> {
     this.setState({editing: id});
   }
 
+  activeListFilter(task: TaskInterface) {
+    return task.task_list_id === this.props.activeList.id   
+  }
+
+  searchFilter(task: TaskInterface) {
+    const { search: { title, tags } } = this.props;
+
+    // filter by title and tags
+    return task.title.toLowerCase().includes(title.toLowerCase()) &&
+      tags.every(tag => task.tags.includes(tag));
+  }
+
   render() {
-    const { tasks, taskList, filter } = this.state;
-    
-    const crudTasks = { 
+    const { tasks } = this.state;
+
+    const crudTasks = {
       add: this.addTask,
       update: this.updateTask,
       delete: this.deleteTask
     }
 
-    const filteredTasks = !filter ? tasks : tasks.filter(filter);
+    const filterFunc = (
+      this.state.search 
+        ? this.searchFilter 
+        : this.activeListFilter
+    ).bind(this);
+    const filteredTasks =  tasks.filter(filterFunc);
 
     // sort tasks by created_at (desc)
-    const sortedTasks = filteredTasks.sort((a, b) => 
+    const sortedTasks = filteredTasks.sort((a, b) =>
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
 
     const allTasks = sortedTasks.map(task => (
-      <Task 
-        key={task.id} 
-        task={task} 
+      <Task
+        key={task.id}
+        task={task}
         crud={crudTasks}
         editing={this.state.editing === task.id}
         editTask={this.editTask}
         showContextMenu={this.props.showContextMenu}
       />
     ));
-    
+
     return (
       <div className="tasks-container">
         <h1>
