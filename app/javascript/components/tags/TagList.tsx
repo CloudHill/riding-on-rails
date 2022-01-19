@@ -15,6 +15,8 @@ class TagMenu extends React.Component<Props> {
   
   render() {
     const { tags, onClick } = this.props;
+    if (!tags) return null;
+
     const allTags = tags.map(tag => (
       <Tag 
         key={tag.id} 
