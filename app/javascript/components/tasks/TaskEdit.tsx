@@ -98,6 +98,8 @@ class TaskEdit extends React.Component<Props, State> {
 
   addTag(tag: TagInterface) {
     const { tags } = this.state;
+    if (tags.find(t => t.id === tag.id)) return; // tag already exists
+    
     const newTags = tags.concat(tag);
 
     this.props.crud.addTag(tag);
@@ -106,6 +108,7 @@ class TaskEdit extends React.Component<Props, State> {
 
   removeTag(tag: TagInterface) {
     const { tags } = this.state;
+    if (!tags.find(t => t.id === tag.id)) return; // tag doesn't exist
     const newTags = tags.filter(t => t.id !== tag.id)
 
     this.props.crud.removeTag(tag);
