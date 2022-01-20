@@ -8,7 +8,7 @@ interface Props {
   remove?: (tag: TagInterface) => void;
 }
 
-class TagMenu extends React.Component<Props> {
+class TagList extends React.Component<Props> {
   constructor(props) {
     super(props);
   }
@@ -34,4 +34,4 @@ class TagMenu extends React.Component<Props> {
   }
 }
 
-export default TagMenu;
+export default TagList;

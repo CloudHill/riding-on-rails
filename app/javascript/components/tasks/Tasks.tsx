@@ -153,7 +153,7 @@ class Tasks extends React.Component<Props, State> {
 
     // filter by title and tags
     return task.title.toLowerCase().includes(title.toLowerCase()) &&
-      tags.every(tag => task.tags.includes(tag));
+      tags.every(tag => task.tags.find(taskTag => taskTag.id === tag.id));
   }
 
   render() {

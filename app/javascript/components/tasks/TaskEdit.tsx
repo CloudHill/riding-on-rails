@@ -92,7 +92,7 @@ class TaskEdit extends React.Component<Props, State> {
         x: rect.x + (rect.width / 2),
         y: rect.y + (rect.height / 2),
       },
-      content: <TagMenu onClick={this.addTag}/>
+      content: <TagMenu create onClick={this.addTag}/>
     });
   }
 

@@ -294,14 +294,19 @@ span.clear-input {
 /* search */
 
 .searchbar {
-  padding: 4px;
+  padding: 4px 6px;
   background: var(--input-background);
   border-radius: var(--border-radius_2);
   margin-bottom: 14px;
 }
 
+.searchbar-input {
+  display: flex;
+  align-items: center;
+}
+
 .searchbar input {
-  width: 100%;
+  flex: 1;
   padding: 8px;
   min-width: 0;
   background: transparent;
@@ -393,6 +398,7 @@ span.clear-input {
 .context-menu {
   padding: 4px;
   min-width: 150px;
+  min-height: 28px;;
   margin: 0;
   position: absolute;
   box-shadow: 0 0 14px 0 #aaa;
@@ -441,6 +447,10 @@ span.clear-input {
   padding: 0 8px;
   border-radius: var(--border-radius_2);
   margin: 4px 4px 0 0;
+}
+
+.taglist-container:not([create]) {
+  margin: -4px -4px 0 0;
 }
 
 .taglist-header {

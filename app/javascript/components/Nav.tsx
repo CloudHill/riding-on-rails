@@ -20,7 +20,7 @@ class Nav extends React.Component<Props> {
     const { activeList, showContextMenu } = this.props;
     return (
       <div className="navbar">
-        <SearchBar searchTasks={this.props.searchTasks}/>
+        <SearchBar searchTasks={this.props.searchTasks} showContextMenu={showContextMenu}/>
         <TaskLists activeList={activeList} showContextMenu={showContextMenu}/>
       </div>
     )

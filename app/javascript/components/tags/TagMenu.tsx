@@ -5,6 +5,7 @@ import TagInterface from './TagInterface';
 import { getCsrfToken } from '../../helpers';
 
 interface Props {
+  create?: boolean;
   onClick: (tag: TagInterface) => void;
 }
 
@@ -56,15 +57,26 @@ class TagMenu extends React.Component<Props, { tags: TagInterface[] }> {
       .catch(error => console.log(error.message));
   }
   
-  render() {      
+  render() {
+    const { create, onClick } = this.props;
+
     return (
-      <div className="taglist-container">
-        <div className="taglist-header">
-          <TagInput createTag={this.createTag}/>
-        </div>
+      <div
+        className="taglist-container" 
+        //@ts-ignore
+        create={create ? "" : undefined}
+      >
+        {
+          create
+            ? (
+              <div className="taglist-header">
+                <TagInput createTag={this.createTag}/>
+              </div>
+            ) : null
+        }
         <TagList 
           tags={this.state.tags} 
-          onClick={this.props.onClick}
+          onClick={onClick}
         />
       </div>
     )
