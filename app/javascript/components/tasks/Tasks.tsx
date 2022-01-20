@@ -86,6 +86,7 @@ class Tasks extends React.Component<Props, State> {
 
         this.setState({ tasks: newTasks});
         this.tasksRef.current.scrollTo(0, 0); // scroll to top
+        this.props.edit.editTask(newTask.id); // edit new task
       })
       .catch(error => console.log(error.message));
   }
