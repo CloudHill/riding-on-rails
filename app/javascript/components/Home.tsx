@@ -71,7 +71,10 @@ class Home extends React.Component<{}, State> {
 
   setActiveList(taskList: TaskListInterface) {
     this.editTask(null);
-    this.setState({ activeList: taskList });
+    this.setState({
+      activeList: taskList, 
+      ...emptySearch
+    });
   }
 
   onDocumentClick(e:MouseEvent) {
