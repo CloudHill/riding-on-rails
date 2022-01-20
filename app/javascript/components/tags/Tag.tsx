@@ -21,13 +21,13 @@ class Tag extends React.Component<Props> {
         {
           remove
             ? (
-                <span className="clear-input" 
-                  onClick = {e => {
-                    remove(tag);
-                    e.stopPropagation();
-                  }}>
-                    <X size="10px"/>
-                </span>
+              <span className="mini-button" 
+                onClick = {e => {
+                  remove(tag);
+                  e.stopPropagation();
+                }}>
+                  <X size="10px"/>
+              </span>
             ) : null
         }
       </div>

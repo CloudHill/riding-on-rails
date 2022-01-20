@@ -199,7 +199,7 @@ input, textarea {
   line-height: 0;
 }
 
-span.clear-input {
+.mini-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -489,6 +489,6 @@ span.clear-input {
   padding-right: 4px;
 }
 
-.tag-rm span.clear-input {
+.tag-rm .mini-button {
   margin-left: 6px;
 }

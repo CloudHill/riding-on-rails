@@ -1,8 +1,13 @@
 import React, { ChangeEvent } from 'react'
 import TagInterface from './TagInterface';
+import { Edit2 } from 'react-feather';
 
 interface Props {
-  createTag: (TagInterface) => void
+  createTag: (TagInterface) => void;
+  edit: {
+    editing: boolean;
+    toggleEditing: () => void;
+  };
 }
 
 class TagInput extends React.Component<Props, { name: string }> {
@@ -34,12 +39,21 @@ class TagInput extends React.Component<Props, { name: string }> {
             autoFocus
           />
         </div>
-        <button 
-          className="action-button action-add button-primary"
-          onClick={() => this.createTag()}  
-        >
-          Create tag
-        </button>
+        <div className="task-actions">
+          <button 
+            className="action-button action-add button-primary"
+            onClick={() => this.createTag()}  
+          >
+            Create tag
+          </button>
+          <button 
+            title="Edit tags"
+            className={"action-button icon-button" + (this.props.edit.editing ? " button-primary" : "")}
+            onClick={() => this.props.edit.toggleEditing()}
+          >
+            <Edit2 size="100%"/>
+          </button>
+        </div>
       </>
     )
   }

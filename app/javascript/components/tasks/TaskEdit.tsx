@@ -103,7 +103,7 @@ class TaskEdit extends React.Component<Props, State> {
     const newTags = tags.concat(tag);
 
     this.props.crud.addTag(tag);
-    this.setState({ tags: newTags })
+    this.setState({ tags: newTags });
   }
 
   removeTag(tag: TagInterface) {
@@ -112,7 +112,7 @@ class TaskEdit extends React.Component<Props, State> {
     const newTags = tags.filter(t => t.id !== tag.id)
 
     this.props.crud.removeTag(tag);
-    this.setState({ tags: newTags })
+    this.setState({ tags: newTags });
   }
 
   render() {
@@ -136,7 +136,7 @@ class TaskEdit extends React.Component<Props, State> {
                 <span>
                   {formatDate(new Date(value))}
                 </span>
-                <span className="clear-input" 
+                <span className="mini-button" 
                   onClick = {e => {
                     this.setDueDate(null);
                     e.stopPropagation();

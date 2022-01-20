@@ -9,14 +9,22 @@ interface Props {
   onClick: (tag: TagInterface) => void;
 }
 
-class TagMenu extends React.Component<Props, { tags: TagInterface[] }> {
+interface State {
+  tags: TagInterface[];
+  editing: boolean;
+}
+
+class TagMenu extends React.Component<Props, State> {
   constructor(props) {
     super(props)
     this.state = {
-       tags: []
+       tags: [],
+       editing: false
     }
 
     this.createTag = this.createTag.bind(this);
+    this.deleteTag = this.deleteTag.bind(this);
+    this.toggleEditing = this.toggleEditing.bind(this);
   }
 
   componentDidMount() {
@@ -56,9 +64,45 @@ class TagMenu extends React.Component<Props, { tags: TagInterface[] }> {
       })
       .catch(error => console.log(error.message));
   }
+
+  
+
+  deleteTag(tag: TagInterface) {
+    const id = tag.id;
+    const url = `/api/v1/tags/${id}`;
+    const token = getCsrfToken();
+
+    fetch(url, {
+      method: "DELETE",
+      headers: {
+        "X-CSRF-Token": token,
+      }
+    })
+      .then(response => {
+        if (response.ok) return response.json();
+        throw new Error("Network response was not ok.");
+      })
+      .then(response => {
+        const tags = this.state.tags.filter(
+          ({id}) => id !== tag.id
+        );
+
+        this.setState({tags});
+      })
+      .catch(error => console.log(error.message));
+  }
+
+  toggleEditing() {
+    this.setState({ editing: !this.state.editing});
+  }
   
   render() {
     const { create, onClick } = this.props;
+    const { tags, editing } = this.state;
+    const edit = {
+      editing,
+      toggleEditing: this.toggleEditing
+    }
 
     return (
       <div
@@ -70,13 +114,17 @@ class TagMenu extends React.Component<Props, { tags: TagInterface[] }> {
           create
             ? (
               <div className="taglist-header">
-                <TagInput createTag={this.createTag}/>
+                <TagInput
+                  createTag={this.createTag}
+                  edit={edit}
+                />
               </div>
             ) : null
         }
         <TagList 
-          tags={this.state.tags} 
+          tags={tags} 
           onClick={onClick}
+          remove={editing ? this.deleteTag : undefined}
         />
       </div>
     )
