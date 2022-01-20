@@ -35,7 +35,7 @@ class TagInput extends React.Component<Props, { name: string }> {
           />
         </div>
         <button 
-          className="action-button action-add"
+          className="action-button action-add button-primary"
           onClick={() => this.createTag()}  
         >
           Create tag
