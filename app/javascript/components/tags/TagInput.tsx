@@ -48,7 +48,9 @@ class TagInput extends React.Component<Props, { name: string }> {
           </button>
           <button 
             title="Edit tags"
-            className={"action-button icon-button" + (this.props.edit.editing ? " button-primary" : "")}
+            className="action-button icon-button"
+            //@ts-ignore
+            active={this.props.edit.editing ? "" : undefined}
             onClick={() => this.props.edit.toggleEditing()}
           >
             <Edit2 size="100%"/>

@@ -210,6 +210,10 @@ input, textarea {
   cursor: pointer;
 }
 
+.mini-button[active] {
+  background: #fff3;
+}
+
 .task-note-input {
   font-size: 0.8em;  
 }
@@ -253,7 +257,8 @@ input, textarea {
   width: 30px;
 }
 
-.button-primary {
+.button-primary,
+.action-button[active] {
   background: var(--accent-color);
   color: var(--accent-foreground);
 }
@@ -438,6 +443,7 @@ input, textarea {
  */
 
 .tag {
+  position: relative;
   display: flex;
   align-items: center;
   height: 20px;
@@ -491,4 +497,13 @@ input, textarea {
 
 .tag-rm .mini-button {
   margin-left: 6px;
+}
+
+/* colorpicker */
+
+.colorpicker {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  margin-top: 4px;
 }

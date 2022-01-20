@@ -23,6 +23,7 @@ class TagMenu extends React.Component<Props, State> {
     }
 
     this.createTag = this.createTag.bind(this);
+    this.updateTag = this.updateTag.bind(this);
     this.deleteTag = this.deleteTag.bind(this);
     this.toggleEditing = this.toggleEditing.bind(this);
   }
@@ -65,7 +66,33 @@ class TagMenu extends React.Component<Props, State> {
       .catch(error => console.log(error.message));
   }
 
-  
+  updateTag(tag: TagInterface, newProps) {
+    const id = tag.id;
+    const url = `/api/v1/tags/${id}`;
+    const token = getCsrfToken();
+
+    fetch(url, {
+      method: "PATCH",
+      headers: {
+        "X-CSRF-Token": token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(newProps)
+    })
+      .then(response => {
+        if (response.ok) return response.json();
+        throw new Error("Network response was not ok.");
+      })
+      .then(response => {
+        const newTag = response as TagInterface;
+        const tags = this.state.tags.map(
+          t => t.id === tag.id ? newTag : t
+        );
+
+        this.setState({ tags });
+      })
+      .catch(error => console.log(error.message));
+  }
 
   deleteTag(tag: TagInterface) {
     const id = tag.id;
@@ -125,6 +152,8 @@ class TagMenu extends React.Component<Props, State> {
           tags={tags} 
           onClick={onClick}
           remove={editing ? this.deleteTag : undefined}
+          editing={editing}
+          updateTag={this.updateTag}
         />
       </div>
     )
