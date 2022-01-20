@@ -36,7 +36,7 @@ class Tasks extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      tasks: [],
+      tasks: null,
       search: false
     }
 
@@ -158,14 +158,25 @@ class Tasks extends React.Component<Props, State> {
 
   render() {
     const { tasks } = this.state;
-
     const crudTasks = {
       add: this.addTask,
       update: this.updateTask,
       delete: this.deleteTask
     }
 
-    const { title, tags} = this.props.search;
+    if (tasks === null) {
+      return (
+        <div className="tasks-container">
+          <h1>
+            {this.props.activeList.name}
+          </h1>
+          <div ref={this.tasksRef} className="tasks"/>
+          <AddTask crud={crudTasks}/>
+        </div>
+      )
+    }
+
+    const { title, tags } = this.props.search;
     const search = title || tags.length > 0;
 
     const filterFunc = (
@@ -196,7 +207,13 @@ class Tasks extends React.Component<Props, State> {
           {search ? "Search" : this.props.activeList.name}
         </h1>
         <div ref={this.tasksRef} className="tasks">
-          {allTasks}
+          {
+            filteredTasks.length > 0
+              ? allTasks
+              : search
+                ? "Your search did not match any tasks"
+                : "This list is empty, add a task!"
+          }
         </div>
         <AddTask crud={crudTasks}/>
       </div>
