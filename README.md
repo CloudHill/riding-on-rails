@@ -8,6 +8,8 @@ This is my submission for the CVWO 2021/2022 Assignment.
 
 It is a task management web app developed using React and Rails.
 
+Deployed link: [riding-on-rails.herokuapp.com](https://riding-on-rails.herokuapp.com/)
+
 ## Database Initialization
 
 Make sure PostgreSQL is set up and run the following commands to initialize the database:
@@ -34,6 +36,8 @@ The app can then be accessed from the browser through the URL `[localhost:3000](
 
 The app interface is split into two major sections: the navbar and tasks
 
+![App Interface](https://raw.githubusercontent.com/CloudHill/riding-on-rails/main/screenshots/image-1.png)
+
 ### Navbar
 
 The navbar consists of a search bar, a list of all task lists, and an input bar.
@@ -45,7 +49,11 @@ The search bar allows the user to filter all tasks by their title and tags.
 #### Task Lists
 
 Clicking on a task list will set that list as the current active task list. The current active task list will be bolded.
+
+![Task List Context Menu](https://raw.githubusercontent.com/CloudHill/riding-on-rails/main/screenshots/image-2.png)
+
 A context menu can be accessed by right clicking on a task list, which gives the user the option to rename or delete the list.
+
 The default task list “Tasks” cannot be deleted or renamed.
 
 #### Input bar
@@ -61,7 +69,9 @@ The tasks section consists of a list of tasks and an input bar.
 The list of tasks will either contain
 
 * all tasks within the current active task list
-* all tasks that match the search query (if the search bar is populated) 
+* all tasks that match the search query (if the search bar is populated)
+
+![Tasks](https://raw.githubusercontent.com/CloudHill/riding-on-rails/main/screenshots/image-3.png)
 
 A task’s completion can be toggled by clicking the circle on the left of the task.
 
@@ -74,6 +84,8 @@ The input bar allows the user to add a new task to the currently active task lis
 ### Tags
 
 Each task can be assigned multiple tags. The user can then filter tasks by their tags through the search bar.
+
+![Tag Editing](https://raw.githubusercontent.com/CloudHill/riding-on-rails/main/screenshots/image-4.png)
 
 Tags can be created and modified through the task edit interface.
 
