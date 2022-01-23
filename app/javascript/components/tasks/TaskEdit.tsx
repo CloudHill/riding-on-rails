@@ -11,7 +11,7 @@ import TagInterface from '../tags/TagInterface';
 
 interface Props {
   task: TaskInterface;
-  crud: { delete, update, addTag, removeTag };
+  crud: { delete, update, addTag, removeTag, updateTag };
   closeEdit: () => void;
   showContextMenu: (options: ContextMenuProps) => void;
 }
@@ -44,6 +44,7 @@ class TaskEdit extends React.Component<Props, State> {
 
     this.addTag = this.addTag.bind(this);
     this.removeTag = this.removeTag.bind(this);
+    this.updateTag = this.updateTag.bind(this);
   }
 
   updateTask(props) {
@@ -92,7 +93,10 @@ class TaskEdit extends React.Component<Props, State> {
         x: rect.x + (rect.width / 2),
         y: rect.y + (rect.height / 2),
       },
-      content: <TagMenu create onClick={this.addTag}/>
+      content: <TagMenu 
+        create 
+        onClick={this.addTag} 
+        onUpdate={this.updateTag}/>
     });
   }
 
@@ -112,6 +116,14 @@ class TaskEdit extends React.Component<Props, State> {
     const newTags = tags.filter(t => t.id !== tag.id)
 
     this.props.crud.removeTag(tag);
+    this.setState({ tags: newTags });
+  }
+
+  updateTag(tag: TagInterface) {
+    const { tags } = this.state;
+    const newTags = tags.map(t => t.id === tag.id ? tag : t);
+
+    this.props.crud.updateTag(tag);
     this.setState({ tags: newTags });
   }
 

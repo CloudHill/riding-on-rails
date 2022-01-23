@@ -7,7 +7,7 @@ import { ContextMenuProps } from '../ContextMenu';
 
 interface Props {
   task: TaskInterface;
-  crud: { delete, update };
+  crud: { delete, update, updateTag };
   edit: {
     id: number;
     editTask: (id:number) => void;

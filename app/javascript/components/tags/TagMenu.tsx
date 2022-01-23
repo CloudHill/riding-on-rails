@@ -7,6 +7,7 @@ import { getCsrfToken } from '../../helpers';
 interface Props {
   create?: boolean;
   onClick: (tag: TagInterface) => void;
+  onUpdate: (tag: TagInterface) => void;
 }
 
 interface State {
@@ -84,11 +85,13 @@ class TagMenu extends React.Component<Props, State> {
         throw new Error("Network response was not ok.");
       })
       .then(response => {
+        const { onUpdate } = this.props;
         const newTag = response as TagInterface;
         const tags = this.state.tags.map(
           t => t.id === tag.id ? newTag : t
         );
 
+        if (onUpdate) onUpdate(newTag);
         this.setState({ tags });
       })
       .catch(error => console.log(error.message));

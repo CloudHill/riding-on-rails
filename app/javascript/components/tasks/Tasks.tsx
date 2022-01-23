@@ -45,6 +45,7 @@ class Tasks extends React.Component<Props, State> {
     this.addTask = this.addTask.bind(this);
     this.updateTask = this.updateTask.bind(this);
     this.deleteTask = this.deleteTask.bind(this);
+    this.onTagUpdate = this.onTagUpdate.bind(this);
   }
 
   componentDidMount() {
@@ -145,10 +146,27 @@ class Tasks extends React.Component<Props, State> {
       .catch(error => console.log(error.message));
   }
 
+  // map every tags of every tasks
+  // inefficient but works
+  onTagUpdate(tag: TagInterface) {
+    const { tasks } = this.state;
+    
+    const newTasks = tasks.map(
+      task => {
+        task.tags = task.tags.map(t => t.id === tag.id ? tag : t);        
+        return task;
+      }
+    );
+      
+    this.setState({ tasks: newTasks })
+  }
+
+  // filter tasks within current active list
   activeListFilter(task: TaskInterface) {
     return task.task_list_id === this.props.activeList.id   
   }
 
+  // filter tasks that match the search query
   searchFilter(task: TaskInterface) {
     const { search: { title, tags } } = this.props;
 
@@ -162,7 +180,8 @@ class Tasks extends React.Component<Props, State> {
     const crudTasks = {
       add: this.addTask,
       update: this.updateTask,
-      delete: this.deleteTask
+      delete: this.deleteTask,
+      updateTag: this.onTagUpdate,
     }
 
     if (tasks === null) {
